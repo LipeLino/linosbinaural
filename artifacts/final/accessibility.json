@@ -1,0 +1,146 @@
+[
+  {
+    "name": "home-390-en-night",
+    "layout": {
+      "width": 390,
+      "scrollWidth": 390,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "home-768-pt-day",
+    "layout": {
+      "width": 768,
+      "scrollWidth": 768,
+      "lang": "pt-BR"
+    },
+    "violations": []
+  },
+  {
+    "name": "home-1280-en-day",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "home-1440-en-night",
+    "layout": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "save-dialog",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "privacy-dialog",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "library-guest",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "account",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "share-unavailable",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "evidence",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "ad-free",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "not-found",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "long-title",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "sponsor-layout-preview",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "offline",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "zoom-200-layout",
+    "layout": {
+      "width": 640,
+      "scrollWidth": 640,
+      "lang": "en"
+    },
+    "violations": []
+  }
+]

@@ -2,7 +2,7 @@
 
 ## Milestone: implemented; local acceptance and release handoff
 
-- Branch: new local main branch; first coherent source milestone will be recorded in Git. All files are project-owned; workspace was initially empty.
+- Branch: `main`; implementation milestone `8765ffa`. The following checkpoint records final artifacts and the verified visual dialog correction; use `git log -1 --oneline` for its final SHA. All files are project-owned; workspace was initially empty.
 - Implemented: original responsive EN/PT day/night listening room, signal-tested Web Audio engine and licensed library, private/save/share/account APIs and UI, migrations/RLS, real Stripe integration, gated static sponsorship, safety/evidence/legal/support pages, production subpath Worker, CI/configuration/secret guards.
 - Verified locally: production build; 27 unit/API/SQL tests; 2 opt-in real local Auth/PostgREST tests; 13 production guest browser tests; 16-state axe/layout sweep; three-rate signal checks and 60.18-second soak; dependency/secret checks and Worker dry bundle. See evidence.md for precision and limitations.
 - Pending: exact account-browser test approval after automatic review rejection; then actual authenticated UI journey and saved-shelf screenshots. External hosted email/payments/routing/contact and human device listening are listed only in dev-to-do.md.
@@ -13,4 +13,6 @@
 
 ## Next unlocked action
 
-Complete final source/build checkpoint and commit. If the pending user approval arrives, run the exact local account-browser suite and repair any findings; otherwise retain it explicitly unverified. Authenticate/configure external services only after the precise access/capacity/identity/routing gates can be satisfied without paid commitments or unrelated-site disruption. Do not mark the full goal achieved while account-browser or live setup acceptance remains open.
+Implementation and local verification are checkpointed. Dialog-centering regression passed (1/1) and both affected axe states have zero violations. If the pending user approval arrives, run the exact local account-browser suite and repair any findings; otherwise retain it explicitly unverified. Authenticate/configure external services only after the precise access/capacity/identity/routing gates can be satisfied without paid commitments or unrelated-site disruption. Do not mark the full goal achieved while account-browser or live setup acceptance remains open.
+
+Current local preview: http://127.0.0.1:8787/linosbinaural/ (localhost only). Supabase Docker stack remains available. No Git remote is configured.

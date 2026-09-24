@@ -1073,6 +1073,7 @@ input[type="range"]::-moz-range-thumb {
   opacity: 0.85;
 }
 .modal {
+  margin: auto;
   padding: 0;
   border: 5px solid var(--wood);
   outline: 1px solid var(--wood-light);

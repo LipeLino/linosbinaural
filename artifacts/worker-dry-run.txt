@@ -1,0 +1,12 @@
+⛅️ wrangler 4.137.0
+────────────────────
+✨ Read 152 files from the assets directory C:\dev\archived\linosbinaural\dist
+Total Upload: 804.94 KiB / gzip: 129.28 KiB
+Your Worker has access to the following bindings:
+Binding                                           Resource
+env.RATE_LIMITER (60 requests/60s)                Rate Limit
+env.ASSETS                                        Assets
+env.PUBLIC_ORIGIN ("https://mateuslino.com")      Environment Variable
+env.APP_ENV ("production")                        Environment Variable
+
+--dry-run: exiting now.
