@@ -1,7 +1,7 @@
-⛅️ wrangler 4.137.0
-────────────────────
-✨ Read 152 files from the assets directory C:\dev\archived\linosbinaural\dist
-Total Upload: 805.88 KiB / gzip: 129.55 KiB
+⛅️ wrangler 4.137.0 (update available 4.138.0)
+───────────────────────────────────────────────
+✨ Read 154 files from the assets directory C:\dev\archived\linosbinaural\dist
+Total Upload: 805.88 KiB / gzip: 129.54 KiB
 Your Worker has access to the following bindings:
 Binding                                           Resource
 env.RATE_LIMITER (60 requests/60s)                Rate Limit

@@ -1,6 +1,8 @@
-﻿# Lino's Binaural
+# Lino's Binaural
 
 An original woodland listening room: free binaural tones, eight ambience layers, private saved mixes, revocable sharing, and optional account-owned ad-free access. English and Brazilian Portuguese. Next.js static export + one Cloudflare Worker + Supabase + Stripe Checkout. No LLM service.
+
+The listening cabinet now includes original pixel companions Miso and Maple, tactile controls, a choice of five listening intentions, an optional first-use tour, and a bilingual frequency field guide with research links and explicit evidence limits. Pet greetings are silent; room motion follows system preferences and can be paused separately from audio.
 
 **Status:** implemented and locally verified; not deployed. The canonical target is `https://mateuslino.com/linosbinaural`. Cloud authentication/routing, hosted account/email setup, merchant setup, and an operational support contact remain external launch gates. Read [evidence](docs/evidence.md), [acceptance matrix](docs/acceptance.md), and [human-only blockers](docs/dev-to-do.md). Account browser E2E is separately awaiting automatic-review approval; API/RLS tests are not a substitute for it.
 

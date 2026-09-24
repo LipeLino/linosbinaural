@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
@@ -161,7 +161,7 @@ export function InfoPage({ kind }: { kind: InfoKind }) {
     {kind === 'privacy' && <>
       <p>{t('You can listen as a guest. Audio is generated and mixed in your browser; your listening choices do not require an account or a network request once needed recordings have loaded.', 'Você pode ouvir sem conta. O áudio é gerado e misturado no navegador; suas escolhas de escuta não exigem conta nem conexão depois que as gravações necessárias carregam.')}</p>
       <Panel title={t('On this device', 'Neste aparelho')}>
-        <p>{t('Local storage under the linosbinaural:v1: prefix keeps your draft mix, chosen language, and theme. It never restarts sound automatically. When account services are configured, the Supabase browser client also stores its sign-in session under a namespaced key in local storage so it can refresh your access. That browser-readable session is not an HttpOnly cookie.', 'O armazenamento local com o prefixo linosbinaural:v1: guarda o rascunho, o idioma e o tema. Ele nunca reinicia o som automaticamente. Quando os serviços de conta estão configurados, o cliente Supabase também guarda a sessão de acesso sob uma chave própria no armazenamento local para poder renová-la. Essa sessão, acessível ao navegador, não é um cookie HttpOnly.')}</p>
+        <p>{t('Local storage under the linosbinaural:v1: prefix keeps your draft mix, chosen language, theme, and room-motion preference. It never restarts sound automatically. When account services are configured, the Supabase browser client also stores its sign-in session under a namespaced key in local storage so it can refresh your access. That browser-readable session is not an HttpOnly cookie.', 'O armazenamento local com o prefixo linosbinaural:v1: guarda o rascunho, o idioma, o tema e a preferência de animação da sala. Ele nunca reinicia o som automaticamente. Quando os serviços de conta estão configurados, o cliente Supabase também guarda a sessão de acesso sob uma chave própria no armazenamento local para poder renová-la. Essa sessão, acessível ao navegador, não é um cookie HttpOnly.')}</p>
         <p>{t('This app sets no advertising or analytics cookies. Hosted checkout may use Stripe’s own cookies; see its', 'Este aplicativo não define cookies de publicidade ou análise. A finalização hospedada pode usar cookies do próprio Stripe; consulte sua')} <ExternalLink href="https://stripe.com/privacy">{t('privacy notice', 'política de privacidade')}</ExternalLink>.</p>
       </Panel>
       <Panel title={t('Accounts and saved mixes', 'Contas e mixes salvos')}>

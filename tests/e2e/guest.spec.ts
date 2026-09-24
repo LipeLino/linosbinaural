@@ -115,7 +115,10 @@ test("loads a record without autoplay or raising master volume", async ({
   await page.goto(HOME);
   const master = page.getByRole("spinbutton", { name: "Master volume (%)" });
   await master.fill("23");
-  await page.getByRole("button", { name: /Quiet Shore/ }).click();
+  await page
+    .locator(".record-shelf")
+    .getByRole("button", { name: /Quiet Shore/ })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Quiet Shore" }),
   ).toBeVisible();
@@ -203,8 +206,8 @@ test("guest save dialog traps focus and closes with Escape without claiming a sa
   for (let i = 0; i < 6; i++) {
     await page.keyboard.press("Tab");
     expect(
-      await page.evaluate(() =>
-        document.querySelector("dialog")?.contains(document.activeElement),
+      await dialog.evaluate((element) =>
+        element.contains(document.activeElement),
       ),
     ).toBe(true);
   }

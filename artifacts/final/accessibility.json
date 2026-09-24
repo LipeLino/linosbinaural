@@ -142,5 +142,41 @@
       "lang": "en"
     },
     "violations": []
+  },
+  {
+    "name": "first-use-tour-en",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "frequency-guide-expanded",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "pet-greeting",
+    "layout": {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "lang": "en"
+    },
+    "violations": []
+  },
+  {
+    "name": "first-use-tour-pt-mobile",
+    "layout": {
+      "width": 390,
+      "scrollWidth": 390,
+      "lang": "pt-BR"
+    },
+    "violations": []
   }
 ]

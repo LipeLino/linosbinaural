@@ -7,6 +7,8 @@ import { useApp } from "./AppProvider";
 import { PixelIcon } from "./PixelIcon";
 import { Modal } from "./Modal";
 import { SponsorSlot } from "./SponsorSlot";
+import { RoomScene } from "./RoomScene";
+import { StartHere, FrequencyContext, FrequencyGuide } from "./ListeningGuide";
 import {
   AMBIENCE_IDS,
   FACTORY_PRESETS,
@@ -412,7 +414,11 @@ export function Transport({ compact = false }: { compact?: boolean }) {
   const playing = audio.status === "playing";
   const pending = audio.status === "loading";
   return (
-    <div className={`transport ${compact ? "mini-transport" : ""}`}>
+    <div
+      id={compact ? undefined : "session-controls"}
+      tabIndex={-1}
+      className={`transport ${compact ? "mini-transport" : ""}`}
+    >
       <button
         className="button play-button"
         onClick={() => (playing ? engine.pause() : play())}
@@ -494,39 +500,27 @@ export function ListeningDesk() {
           {tr("FREE TO LISTEN", "GRÁTIS PARA OUVIR")}
         </span>
       </div>
+      <StartHere />
       <div className="listening-layout">
         <section
           className="listening-console wood-frame"
           aria-labelledby="desk-heading"
         >
-          <div
-            className={`room-scene ${audio.status === "playing" ? "playing" : ""} ${mix.ambience.rain.enabled ? "raining" : ""}`}
-          >
-            <Image
-              src={assetPath("art/listening-room.svg")}
-              width={1024}
-              height={352}
-              alt=""
-              priority
-            />
-            <span className="scene-plaque" id="desk-heading">
-              {tr("THE LISTENING ROOM", "A SALA DE ESCUTA")}
-            </span>
-            <div className="window-rain" aria-hidden="true" />
-            <span className="lamp-glow" aria-hidden="true" />
-            <span className="mug-steam" aria-hidden="true" />
-          </div>
+          <RoomScene />
           <div className="console-face">
             <div className="now-playing">
-              <div
-                className={`mini-vinyl ${audio.status === "playing" ? "spinning" : ""}`}
-              >
-                <Image
-                  src={assetPath(`art/cover-${mix.cover}.svg`)}
-                  width={28}
-                  height={28}
-                  alt=""
-                />
+              <div className="turntable-deck" aria-hidden="true">
+                <span className="tonearm" />
+                <div
+                  className={`mini-vinyl ${audio.status === "playing" ? "spinning" : ""}`}
+                >
+                  <Image
+                    src={assetPath(`art/cover-${mix.cover}.svg`)}
+                    width={28}
+                    height={28}
+                    alt=""
+                  />
+                </div>
               </div>
               <div>
                 <span className="eyebrow">
@@ -538,6 +532,7 @@ export function ListeningDesk() {
               </div>
               <SaveMixButton />
             </div>
+            <Transport />
             <div className="binaural-head">
               <div>
                 <h3>{tr("Binaural tones", "Tons binaurais")}</h3>
@@ -566,7 +561,18 @@ export function ListeningDesk() {
                   <span>Hz</span>
                 </div>
                 <span className="band-badge">
-                  {bandFor(mix.binaural.beat)}
+                  {tr(
+                    bandFor(mix.binaural.beat),
+                    (
+                      {
+                        Delta: "Delta",
+                        Theta: "Teta",
+                        Alpha: "Alfa",
+                        Beta: "Beta",
+                        Gamma: "Gama",
+                      } as const
+                    )[bandFor(mix.binaural.beat)],
+                  )}
                   {mix.binaural.beat >= 30
                     ? tr(" · experiment", " · experimento")
                     : ""}
@@ -759,7 +765,7 @@ export function ListeningDesk() {
                 </p>
               </div>
             )}
-            <Transport />
+            <FrequencyContext />
             {(audio.status === "error" || audio.status === "interrupted") && (
               <p className="field-error" role="alert">
                 {tr(
@@ -789,6 +795,7 @@ export function ListeningDesk() {
         </p>
       </div>
       <RecordShelf />
+      <FrequencyGuide />
       <SponsorSlot />
       <div className="quiet-note">
         <span className="tiny-light" />

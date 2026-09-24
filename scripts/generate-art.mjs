@@ -1,4 +1,4 @@
-﻿import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
 await mkdir("public/art", { recursive: true });
 const r = (x, y, w, h, c) =>
   `<rect x="${Math.round(x)}" y="${Math.round(y)}" width="${Math.round(w)}" height="${Math.round(h)}" fill="${c}"/>`;
@@ -191,6 +191,8 @@ await writeFile(
       assets: [
         "listening-room.svg",
         "mark.svg",
+        "pet-miso.svg",
+        "pet-maple.svg",
         ...["moon", "shore", "cafe", "lantern", "forest"].map(
           (x) => "cover-" + x + ".svg",
         ),
@@ -201,3 +203,5 @@ await writeFile(
   ),
 );
 console.log("Generated room, five sleeves, mark and manifest.");
+
+await import("./generate-pets.mjs");

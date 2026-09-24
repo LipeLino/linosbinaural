@@ -13,6 +13,10 @@ async function createPage(options) {
 }
 async function inspect(page, name) {
   await page.evaluate(() => document.fonts.ready);
+  // Normalize full-page captures so fixed off-screen skip links stay off-screen.
+  await page.evaluate(() =>
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" }),
+  );
   await page.screenshot({
     path: `artifacts/final/${name}.png`,
     fullPage: true,
@@ -113,6 +117,34 @@ try {
   await page.goto(home);
   await inspect(page, "zoom-200-layout");
   await page.close();
+  // New guest-only guidance and companion states, explicitly approved by the owner.
+  const guide = await createPage({
+    viewport: { width: 1280, height: 900 },
+    reducedMotion: "reduce",
+  });
+  await guide.goto(home);
+  await guide.getByRole("button", { name: "Show me around" }).click();
+  await inspect(guide, "first-use-tour-en");
+  await guide.keyboard.press("Escape");
+  await guide.locator(".current-frequency-note summary").click();
+  await guide.locator(".band-delta summary").click();
+  await guide.locator(".band-gamma summary").click();
+  await inspect(guide, "frequency-guide-expanded");
+  await guide.getByRole("button", { name: "Pet Miso the cat" }).click();
+  await inspect(guide, "pet-greeting");
+  await guide.close();
+  const ptGuide = await createPage({
+    viewport: { width: 390, height: 844 },
+    reducedMotion: "reduce",
+  });
+  await ptGuide.addInitScript(() => {
+    localStorage.setItem("linosbinaural:v1:locale", "pt");
+    localStorage.setItem("linosbinaural:v1:theme", "day");
+  });
+  await ptGuide.goto(home);
+  await ptGuide.getByRole("button", { name: "Me mostre como" }).click();
+  await inspect(ptGuide, "first-use-tour-pt-mobile");
+  await ptGuide.close();
   const perf = await createPage({
     viewport: { width: 390, height: 844 },
     isMobile: true,
