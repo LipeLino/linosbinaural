@@ -320,3 +320,48 @@ test("production shell sends no ad requests or hydration, CSP, and required-asse
     ),
   ).toEqual([]);
 });
+
+test("free playback still works when the browser denies persistent storage", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      get() {
+        throw new DOMException("Storage denied", "SecurityError");
+      },
+    });
+  });
+  await page.goto(HOME);
+  await expect(
+    page.getByRole("heading", { name: "Come in. Tune out." }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Play session", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause session", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Stop and reset session", exact: true })
+    .click();
+  expect(errors).toEqual([]);
+});
+
+test("persistent player localizes factory titles after a language change", async ({
+  page,
+}) => {
+  await page.goto(HOME);
+  await page.locator(".language-button").click();
+  await page.getByRole("button", { name: /Reproduzir/ }).click();
+  await page
+    .getByRole("link", { name: /Minha cole/ })
+    .first()
+    .click();
+  await expect(page.locator(".player-dock strong")).toHaveText("Chuva ao luar");
+  await page.locator(".language-button").click();
+  await expect(page.locator(".player-dock strong")).toHaveText("Moonlit Rain");
+  await page
+    .getByRole("button", { name: "Stop playback", exact: true })
+    .click();
+});

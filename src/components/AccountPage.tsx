@@ -30,6 +30,10 @@ export function AccountPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [profileState, setProfileState] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+  const [profileRetry, setProfileRetry] = useState(0);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -46,18 +50,25 @@ export function AccountPage() {
     return () => data.subscription.unsubscribe();
   }, []);
   useEffect(() => {
+    setDisplayName("");
+    setProfileState("loading");
     if (!session) return;
     let active = true;
     void api
       .account()
       .then((p) => {
-        if (active) setDisplayName(p.displayName ?? "");
+        if (active) {
+          setDisplayName(p.displayName ?? "");
+          setProfileState("ready");
+        }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (active) setProfileState("error");
+      });
     return () => {
       active = false;
     };
-  }, [session]);
+  }, [session, profileRetry]);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("checkout") === "cancelled") setCheckout("cancelled");
@@ -72,7 +83,7 @@ export function AccountPage() {
       return;
     const id = params.get("session_id");
     if (!id) {
-      setCheckout("failed");
+      setCheckout("unverified");
       return;
     }
     attempted.current = true;
@@ -83,7 +94,7 @@ export function AccountPage() {
         setCheckout(result.status);
         await refreshEntitlement();
       })
-      .catch(() => setCheckout("pending"));
+      .catch(() => setCheckout("unverified"));
   }, [session, refreshEntitlement, tr]);
   async function perform(action: () => Promise<void>) {
     setError("");
@@ -116,9 +127,13 @@ export function AccountPage() {
       "Your payment is still being confirmed. This page does not grant ad-free access; your account status below is authoritative.",
       "Seu pagamento ainda está sendo confirmado. Esta página não libera acesso sem anúncios; o status da conta abaixo é o válido.",
     ],
+    unverified: [
+      "We could not verify this payment. Try again or contact support; your account status below remains authoritative.",
+      "N\u00e3o foi poss\u00edvel verificar este pagamento. Tente novamente ou fale com o suporte; o status da conta abaixo continua sendo o v\u00e1lido.",
+    ],
     paid: [
-      "Payment confirmed. Your account’s ad-free status has been refreshed.",
-      "Pagamento confirmado. O status sem anúncios da conta foi atualizado.",
+      "Payment confirmed. Your current account status is shown below.",
+      "Pagamento confirmado. O status atual da conta aparece abaixo.",
     ],
     cancelled: [
       "Checkout cancelled. You can keep listening for free.",
@@ -152,11 +167,11 @@ export function AccountPage() {
       {checkout && (
         <div className="status-message" role="status">
           {tr(...(checkoutText[checkout] ?? checkoutText.pending))}
-          {checkout === "pending" && (
+          {(checkout === "pending" || checkout === "unverified") && (
             <button
               className="text-button"
+              disabled={busy}
               onClick={() => {
-                attempted.current = false;
                 void perform(async () => {
                   const id = new URLSearchParams(window.location.search).get(
                     "session_id",
@@ -230,10 +245,32 @@ export function AccountPage() {
                       "Conta gratuita. Todos os sons e controles estão incluídos.",
                     )}
             </div>
+            {profileState === "loading" && (
+              <p role="status">
+                {tr("Loading your profile...", "Carregando seu perfil...")}
+              </p>
+            )}
+            {profileState === "error" && (
+              <div role="alert" className="field-error">
+                <p>
+                  {tr(
+                    "Your profile could not be loaded. Try again before editing it.",
+                    "N\u00e3o foi poss\u00edvel carregar seu perfil. Tente novamente antes de edit\u00e1-lo.",
+                  )}
+                </p>
+                <button
+                  className="text-button"
+                  onClick={() => setProfileRetry((n) => n + 1)}
+                >
+                  {tr("Retry profile", "Tentar carregar perfil")}
+                </button>
+              </div>
+            )}
             <label className="form-field">
               {tr("Public display name (optional)", "Nome público (opcional)")}
               <input
                 maxLength={40}
+                disabled={profileState !== "ready" || busy}
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
               />
@@ -247,7 +284,7 @@ export function AccountPage() {
             <div className="button-row">
               <button
                 className="button primary"
-                disabled={busy}
+                disabled={busy || profileState !== "ready"}
                 onClick={() =>
                   void perform(async () => {
                     await api.updateAccount(displayName.trim() || null);

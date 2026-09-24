@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { handleApi } from '../../worker/api';
 import { verifyStripeSignature } from '../../worker/payments';
+import { body } from '../../worker/http';
 import type { Env } from '../../worker/env';
 import { DEFAULT_MIX } from '../../src/lib/mix';
 
@@ -13,12 +14,73 @@ const baseEnv: Env = {
 const auth = { authorization: 'Bearer valid.jwt.token' };
 afterEach(() => vi.unstubAllGlobals());
 
+function streamedRequest(path: string, chunks: Uint8Array[], headers: Record<string, string> = {}, onCancel?: () => void): Request {
+  let index = 0;
+  const stream = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      if (index < chunks.length) controller.enqueue(chunks[index++]);
+      else controller.close();
+    },
+    cancel() { onCancel?.(); },
+  }, { highWaterMark: 0 });
+  return new Request(`${origin}${path}`, { method: 'POST', headers, body: stream, duplex: 'half' } as RequestInit);
+}
+
+describe('bounded request bodies', () => {
+  it('rejects missing and understated Content-Length after the first overflowing chunk, then cancels', async () => {
+    for (const headers of ([{}, { 'content-length': '1' }] as Record<string, string>[])) {
+      const cancelled = vi.fn();
+      const request = streamedRequest('/linosbinaural/api/mixes', [new Uint8Array(8), new Uint8Array(9), new Uint8Array(1024)], headers, cancelled);
+      await expect(body(request, 16)).rejects.toMatchObject({ status: 413, code: 'payload_too_large' });
+      expect(cancelled).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('accepts a multibyte JSON value at the exact byte limit and rejects one byte less', async () => {
+    const value = { title: 'Moon \u{1F319}' };
+    const bytes = new TextEncoder().encode(JSON.stringify(value));
+    const split = bytes.indexOf(0xf0) + 2;
+    expect(split).toBeGreaterThan(2);
+    const chunks = [bytes.subarray(0, split), bytes.subarray(split)];
+    await expect(body(streamedRequest('/linosbinaural/api/mixes', chunks), bytes.byteLength)).resolves.toEqual(value);
+    await expect(body(streamedRequest('/linosbinaural/api/mixes', chunks), bytes.byteLength - 1)).rejects.toMatchObject({ status: 413 });
+  });
+});
+
 describe('API trust boundaries', () => {
   it('rejects cross-origin writes before authentication or storage access', async () => {
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
     const request = new Request(`${origin}/linosbinaural/api/mixes`, { method: 'POST', headers: { origin: 'https://evil.example', ...auth }, body: '{}' });
     const response = await handleApi(request, baseEnv);
     expect(response.status).toBe(403);
+    expect(upstream).not.toHaveBeenCalled();
+  });
+
+  it('accepts a full 500-character accented report within the UTF-8 envelope limit', async () => {
+    const details = '\u00e9'.repeat(500);
+    const payload = JSON.stringify({ token: 'a'.repeat(48), reason: 'privacy', details });
+    expect(new TextEncoder().encode(payload).byteLength).toBeGreaterThan(1024);
+    expect(new TextEncoder().encode(payload).byteLength).toBeLessThanOrEqual(2048);
+    const upstream = vi.fn(async (url: string, options: RequestInit) => {
+      expect(url).toContain('/rest/v1/rpc/submit_report');
+      expect(JSON.parse(options.body as string).report_details).toBe(details);
+      return new Response(null, { status: 204 });
+    });
+    vi.stubGlobal('fetch', upstream);
+    const request = new Request(`${origin}/linosbinaural/api/reports`, { method: 'POST', headers: { origin }, body: payload });
+    const response = await handleApi(request, baseEnv);
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: true });
+    expect(upstream).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects a report envelope above 2048 bytes before storage access', async () => {
+    const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
+    const payload = JSON.stringify({ token: 'a'.repeat(48), reason: 'privacy', details: '\u00e9'.repeat(1000) });
+    expect(new TextEncoder().encode(payload).byteLength).toBeGreaterThan(2048);
+    const request = new Request(`${origin}/linosbinaural/api/reports`, { method: 'POST', headers: { origin }, body: payload });
+    const response = await handleApi(request, baseEnv);
+    expect(response.status).toBe(413);
     expect(upstream).not.toHaveBeenCalled();
   });
 
@@ -56,7 +118,7 @@ describe('API trust boundaries', () => {
     const upstream = vi.fn(async (url: string) => {
       if (url.endsWith('/auth/v1/user')) return Response.json({ id: userId });
       if (url.includes('/rest/v1/mixes?')) {
-        const offset = Number(new URL(url).searchParams.get('offset'));
+        const offset = Number(new URL(url as string).searchParams.get('offset'));
         return Response.json(offset === 0 ? Array.from({ length: 100 }, (_, i) => row(i)) : [row(100)]);
       }
       throw new Error('unexpected request');
@@ -78,7 +140,7 @@ describe('API trust boundaries', () => {
       if (url.endsWith('/auth/v1/user')) return Response.json({ id: '11111111-1111-4111-8111-111111111111' });
       if (url.includes('/rest/v1/public_profiles?')) return Response.json([{ display_name: 'Tester' }]);
       if (url.includes('/rest/v1/mixes?') || url.includes('/rest/v1/purchases?')) {
-        const offset = Number(new URL(url).searchParams.get('offset'));
+        const offset = Number(new URL(url as string).searchParams.get('offset'));
         return Response.json(offset === 0 ? Array.from({ length: 500 }, (_, i) => row(i)) : [row(500)]);
       }
       throw new Error('unexpected request');
@@ -129,6 +191,55 @@ describe('checkout boundaries', () => {
     const response = await handleApi(request, payEnv);
     expect(response.status).toBe(400);
     expect(upstream).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects oversized streamed webhooks before HMAC even without an honest length header', async () => {
+    const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
+    for (const headers of ([{}, { 'content-length': '1' }] as Record<string, string>[])) {
+      const cancelled = vi.fn();
+      const request = streamedRequest('/linosbinaural/api/stripe/webhook', [new Uint8Array(64_000), new Uint8Array(64_001), new Uint8Array(10)],
+        { 'stripe-signature': 'invalid', ...headers }, cancelled);
+      const response = await handleApi(request, payEnv);
+      expect(response.status).toBe(413);
+      expect(cancelled).toHaveBeenCalledTimes(1);
+    }
+    expect(upstream).not.toHaveBeenCalled();
+  });
+
+  it('verifies exact signed UTF-8 bytes across a multibyte stream boundary', async () => {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const raw = JSON.stringify({ id: 'evt_unicode', type: 'unhandled.event', created: timestamp, livemode: false,
+      data: { object: { id: 'obj_1', note: 'Moon \u{1F319}' } } });
+    const bytes = new TextEncoder().encode(raw);
+    const prefix = new TextEncoder().encode(`${timestamp}.`);
+    const signed = new Uint8Array(prefix.byteLength + bytes.byteLength);
+    signed.set(prefix); signed.set(bytes, prefix.byteLength);
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('whsec_test'), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const digest = new Uint8Array(await crypto.subtle.sign('HMAC', key, signed));
+    const header = `t=${timestamp},v1=${Array.from(digest, b => b.toString(16).padStart(2, '0')).join('')}`;
+    const split = bytes.indexOf(0xf0) + 2;
+    const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
+    const request = streamedRequest('/linosbinaural/api/stripe/webhook', [bytes.subarray(0, split), bytes.subarray(split)], { 'stripe-signature': header });
+    const response = await handleApi(request, payEnv);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ received: true, ignored: true });
+    expect(upstream).not.toHaveBeenCalled();
+  });
+
+  it('authenticates raw invalid UTF-8 before rejecting the webhook JSON', async () => {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const prefix = new TextEncoder().encode(`${timestamp}.`);
+    const raw = Uint8Array.from([...new TextEncoder().encode('{"id":"'), 0xff, ...new TextEncoder().encode('"}')]);
+    const signed = new Uint8Array(prefix.byteLength + raw.byteLength);
+    signed.set(prefix); signed.set(raw, prefix.byteLength);
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('whsec_test'), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const digest = new Uint8Array(await crypto.subtle.sign('HMAC', key, signed));
+    const header = `t=${timestamp},v1=${Array.from(digest, b => b.toString(16).padStart(2, '0')).join('')}`;
+    const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
+    const response = await handleApi(streamedRequest('/linosbinaural/api/stripe/webhook', [raw], { 'stripe-signature': header }), payEnv);
+    expect(response.status).toBe(400);
+    expect((await response.json()).error).toBe('invalid_json');
+    expect(upstream).not.toHaveBeenCalled();
   });
 
   it('rejects an unsigned webhook before any network or database call', async () => {

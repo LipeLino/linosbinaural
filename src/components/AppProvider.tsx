@@ -11,7 +11,7 @@ import {
 import type { Session } from "@supabase/supabase-js";
 import { AudioEngine, type AudioSnapshot } from "@/audio/AudioEngine";
 import { DEFAULT_MIX, mixSchema, STORAGE_PREFIX, type Mix } from "@/lib/mix";
-import { getAuthClient } from "@/lib/auth";
+import { AUTH_CLEARED_EVENT, getAuthClient } from "@/lib/auth";
 import { api } from "@/lib/api";
 
 type Locale = "en" | "pt";
@@ -128,13 +128,23 @@ function useAppState() {
       setEntitled(false);
       return;
     }
+    const clearSession = () => {
+      entitlementGeneration.current += 1;
+      setSession(null);
+      setEntitled(false);
+      setAuthLoading(false);
+    };
+    window.addEventListener(AUTH_CLEARED_EVENT, clearSession);
     const { data } = auth.auth.onAuthStateChange((_event, newSession) => {
       entitlementGeneration.current += 1;
       setSession(newSession);
       setEntitled(null);
       setAuthLoading(false);
     });
-    return () => data.subscription.unsubscribe();
+    return () => {
+      data.subscription.unsubscribe();
+      window.removeEventListener(AUTH_CLEARED_EVENT, clearSession);
+    };
   }, []);
   const refreshEntitlement = useCallback(async () => {
     const generation = ++entitlementGeneration.current;

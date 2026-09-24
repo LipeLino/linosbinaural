@@ -1,7 +1,7 @@
 import type { Env } from './env';
 import type { User } from './supabase';
 import { db } from './supabase';
-import { ApiError, body, json } from './http';
+import { ApiError, body, json, readLimitedBytes } from './http';
 
 type Currency = 'usd' | 'brl';
 type StripePrice = { id: string; currency: string; unit_amount: number; type: string; active: boolean; product: string };
@@ -80,14 +80,19 @@ function constantEqual(a: string, b: string) {
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
-export async function verifyStripeSignature(payload: string, header: string | null, secret: string, now = Math.floor(Date.now()/1000)): Promise<boolean> {
+export async function verifyStripeSignature(payload: string | Uint8Array, header: string | null, secret: string, now = Math.floor(Date.now()/1000)): Promise<boolean> {
   if (!header) return false;
   const fields = header.split(',').map(x => x.trim());
   const timestamp = Number(fields.find(x => x.startsWith('t='))?.slice(2));
   const signatures = fields.filter(x => x.startsWith('v1=')).map(x => x.slice(3));
   if (!Number.isSafeInteger(timestamp) || Math.abs(now - timestamp) > 300 || signatures.length === 0) return false;
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const signature = hex(new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(`${timestamp}.${payload}`))));
+  const prefix = new TextEncoder().encode(`${timestamp}.`);
+  const raw = typeof payload === 'string' ? new TextEncoder().encode(payload) : payload;
+  const signed = new Uint8Array(prefix.byteLength + raw.byteLength);
+  signed.set(prefix);
+  signed.set(raw, prefix.byteLength);
+  const signature = hex(new Uint8Array(await crypto.subtle.sign('HMAC', key, signed)));
   return signatures.some(candidate => constantEqual(candidate, signature));
 }
 
@@ -104,10 +109,11 @@ async function applyEvent(env: Env, event: StripeEvent, status: 'pending' | 'pai
 
 export async function handleStripeWebhook(request: Request, env: Env): Promise<Response> {
   paymentConfig(env);
-  const bytes = await request.arrayBuffer();
-  if (bytes.byteLength > 128_000) throw new ApiError(413, 'payload_too_large', 'Request is too large.');
-  const raw = new TextDecoder().decode(bytes);
-  if (!(await verifyStripeSignature(raw, request.headers.get('stripe-signature'), env.STRIPE_WEBHOOK_SECRET!))) throw new ApiError(400, 'signature', 'Invalid signature.');
+  const bytes = await readLimitedBytes(request, 128_000);
+  if (!(await verifyStripeSignature(bytes, request.headers.get('stripe-signature'), env.STRIPE_WEBHOOK_SECRET!))) throw new ApiError(400, 'signature', 'Invalid signature.');
+  let raw: string;
+  try { raw = new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+  catch { throw new ApiError(400, 'invalid_json', 'Invalid event.'); }
   let event: StripeEvent;
   try { event = JSON.parse(raw); } catch { throw new ApiError(400, 'invalid_json', 'Invalid event.'); }
   if (!event.id || !event.type || !Number.isSafeInteger(event.created) || event.livemode !== (env.STRIPE_MODE === 'live') || !event.data?.object?.id) throw new ApiError(400, 'invalid_event', 'Invalid event.');

@@ -11,12 +11,36 @@ export function json(data: unknown, status = 200): Response {
   });
 }
 
+export async function readLimitedBytes(request: Request, maxBytes: number): Promise<Uint8Array> {
+  const declared = request.headers.get('content-length');
+  if (declared !== null && Number(declared) > maxBytes) {
+    void request.body?.cancel().catch(() => {});
+    throw new ApiError(413, 'payload_too_large', 'Request is too large.');
+  }
+  if (!request.body) return new Uint8Array();
+  const reader = request.body.getReader();
+  const bytes = new Uint8Array(maxBytes);
+  let size = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value.byteLength > maxBytes - size) {
+        void reader.cancel().catch(() => {});
+        throw new ApiError(413, 'payload_too_large', 'Request is too large.');
+      }
+      bytes.set(value, size);
+      size += value.byteLength;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return bytes.slice(0, size);
+}
+
 export async function body(request: Request, maxBytes = 16_384): Promise<unknown> {
-  const length = Number(request.headers.get('content-length') ?? 0);
-  if (length > maxBytes) throw new ApiError(413, 'payload_too_large', 'Request is too large.');
-  const bytes = await request.arrayBuffer();
-  if (bytes.byteLength > maxBytes) throw new ApiError(413, 'payload_too_large', 'Request is too large.');
-  try { return JSON.parse(new TextDecoder().decode(bytes)); }
+  const bytes = await readLimitedBytes(request, maxBytes);
+  try { return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
   catch { throw new ApiError(400, 'invalid_json', 'Invalid JSON body.'); }
 }
 

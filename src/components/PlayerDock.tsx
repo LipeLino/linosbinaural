@@ -2,9 +2,26 @@
 import { usePathname } from "next/navigation";
 import { useApp } from "./AppProvider";
 import { PixelIcon } from "./PixelIcon";
+import { FACTORY_PRESETS } from "@/lib/mix";
 export function PlayerDock() {
-  const { tr, audio, play, engine, title, master, setMaster } = useApp();
+  const {
+    tr,
+    locale,
+    selected,
+    audio,
+    play,
+    engine,
+    title,
+    master,
+    setMaster,
+  } = useApp();
   const path = usePathname();
+  const record = FACTORY_PRESETS.find((p) => p.id === selected);
+  const displayTitle = record
+    ? locale === "en"
+      ? record.en
+      : record.pt
+    : title;
   if (audio.status === "idle" || audio.status === "error") return null;
   const home = path === "/" || path === "/linosbinaural/";
   return (
@@ -16,7 +33,7 @@ export function PlayerDock() {
         <span className="eyebrow">
           {tr("ON THE TURNTABLE", "NO TOCA-DISCOS")}
         </span>
-        <strong>{title}</strong>
+        <strong>{displayTitle}</strong>
       </div>
       <button
         className="button primary"

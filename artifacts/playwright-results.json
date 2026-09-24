@@ -94,12 +94,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1122,
+                  "duration": 1250,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:21.553Z",
+                  "startTime": "2026-09-24T06:54:50.274Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -128,12 +128,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1590,
+                  "duration": 1719,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:22.862Z",
+                  "startTime": "2026-09-24T06:54:51.709Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -143,7 +143,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-c621fb666a4e3f626184",
           "file": "guest.spec.ts",
-          "line": 19,
+          "line": 33,
           "column": 1
         },
         {
@@ -162,12 +162,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1055,
+                  "duration": 1257,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:24.467Z",
+                  "startTime": "2026-09-24T06:54:53.446Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -177,7 +177,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-366a34919bab66eb881b",
           "file": "guest.spec.ts",
-          "line": 32,
+          "line": 54,
           "column": 1
         },
         {
@@ -196,12 +196,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1034,
+                  "duration": 1241,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:25.538Z",
+                  "startTime": "2026-09-24T06:54:54.717Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -211,7 +211,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-c989dd96aa9141c73b59",
           "file": "guest.spec.ts",
-          "line": 47,
+          "line": 81,
           "column": 1
         },
         {
@@ -230,12 +230,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2071,
+                  "duration": 2073,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:26.585Z",
+                  "startTime": "2026-09-24T06:54:55.972Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -245,7 +245,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-faa883bb0e5808e49079",
           "file": "guest.spec.ts",
-          "line": 60,
+          "line": 112,
           "column": 1
         },
         {
@@ -264,12 +264,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1462,
+                  "duration": 1422,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:28.669Z",
+                  "startTime": "2026-09-24T06:54:58.063Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -279,7 +279,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-319cea02358be87157d0",
           "file": "guest.spec.ts",
-          "line": 72,
+          "line": 132,
           "column": 1
         },
         {
@@ -298,12 +298,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1145,
+                  "duration": 1045,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:30.146Z",
+                  "startTime": "2026-09-24T06:54:59.501Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -313,7 +313,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-f235fc659dc5dbf0a939",
           "file": "guest.spec.ts",
-          "line": 84,
+          "line": 151,
           "column": 3
         },
         {
@@ -332,12 +332,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1109,
+                  "duration": 1068,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:31.306Z",
+                  "startTime": "2026-09-24T06:55:00.568Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -347,7 +347,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-e11bf48c1966c72ab67d",
           "file": "guest.spec.ts",
-          "line": 84,
+          "line": 151,
           "column": 3
         },
         {
@@ -366,12 +366,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1634,
+                  "duration": 1405,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:32.429Z",
+                  "startTime": "2026-09-24T06:55:01.651Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -381,7 +381,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-207e41cb5cb19bc028c8",
           "file": "guest.spec.ts",
-          "line": 97,
+          "line": 177,
           "column": 1
         },
         {
@@ -400,12 +400,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1491,
+                  "duration": 1071,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:34.077Z",
+                  "startTime": "2026-09-24T06:55:03.073Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -415,7 +415,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-e2b6f7a6fff3ce263a4e",
           "file": "guest.spec.ts",
-          "line": 109,
+          "line": 191,
           "column": 1
         },
         {
@@ -434,12 +434,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1774,
+                  "duration": 1300,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:35.584Z",
+                  "startTime": "2026-09-24T06:55:04.157Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -449,7 +449,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-65598472c61414828e9b",
           "file": "guest.spec.ts",
-          "line": 126,
+          "line": 219,
           "column": 1
         },
         {
@@ -468,12 +468,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 858,
+                  "duration": 1199,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:37.374Z",
+                  "startTime": "2026-09-24T06:55:05.468Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -483,7 +483,7 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-3181686a716411ed6d5e",
           "file": "guest.spec.ts",
-          "line": 143,
+          "line": 252,
           "column": 1
         },
         {
@@ -502,12 +502,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 769,
+                  "duration": 994,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-24T06:40:38.244Z",
+                  "startTime": "2026-09-24T06:55:06.683Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -517,7 +517,75 @@
           ],
           "id": "a7ce7f8ccaa30f427d5e-a6b7812d4a6403150571",
           "file": "guest.spec.ts",
-          "line": 152,
+          "line": 271,
+          "column": 1
+        },
+        {
+          "title": "free playback still works when the browser denies persistent storage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 994,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-24T06:55:07.692Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a7ce7f8ccaa30f427d5e-e6a62c3820d68f95bc6a",
+          "file": "guest.spec.ts",
+          "line": 324,
+          "column": 1
+        },
+        {
+          "title": "persistent player localizes factory titles after a language change",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1104,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-24T06:55:08.701Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a7ce7f8ccaa30f427d5e-6af46cb69680d8b61587",
+          "file": "guest.spec.ts",
+          "line": 351,
           "column": 1
         }
       ]
@@ -525,9 +593,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-24T06:40:20.744Z",
-    "duration": 18458.431,
-    "expected": 13,
+    "startTime": "2026-09-24T06:54:48.727Z",
+    "duration": 21356.554,
+    "expected": 15,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

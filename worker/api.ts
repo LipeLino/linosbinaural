@@ -42,7 +42,7 @@ export function handleApi(request: Request, env: Env): Promise<Response> {
     }
     if (path === '/reports' && request.method === 'POST') {
       await rateLimit(request, env, 'report');
-      const data = await body(request, 1024) as Record<string, unknown>;
+      const data = await body(request, 2048) as Record<string, unknown>;
       if (!data || !tokenPattern.test(String(data.token ?? '')) || !['copyright','abuse','privacy','other'].includes(String(data.reason)) || typeof data.details !== 'string' || data.details.length > 500) {
         throw new ApiError(400, 'invalid_report', 'Invalid report.');
       }
