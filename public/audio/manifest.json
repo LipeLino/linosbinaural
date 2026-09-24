@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "loopProcessing": "At decode, the engine overlaps the first 1.5 seconds with the tail and loops the resulting buffer.",
+  "assets": {
+    "rain": {
+      "file": "rain.mp3",
+      "source": "https://opengameart.org/content/rain-on-window-loop",
+      "originalFile": "https://opengameart.org/sites/default/files/rain_on_window_loop.wav",
+      "creator": "alxl",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Window rain recording; trimmed and encoded to MP3.",
+      "excerptStartSeconds": 0,
+      "excerptDurationSeconds": 10,
+      "sha256": "76331f7d0e834621fa1b10cb5bcd7cace329665cfb42ed20b4f0ac401e2abc96",
+      "bytes": 120729
+    },
+    "ocean": {
+      "file": "ocean.mp3",
+      "source": "https://commons.wikimedia.org/wiki/File:Oceanwavescrushing.ogg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Oceanwavescrushing.ogg",
+      "creator": "Luftrum",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+      "processing": "Stereo shore recording; excerpted and encoded to MP3. Adaptation credited under CC BY 3.0.",
+      "excerptStartSeconds": 15,
+      "excerptDurationSeconds": 30,
+      "sha256": "7eb52150ff3e0241290d775abd207fdb4e8f20a75abc864cf5c1fc4b4ea2aecf",
+      "bytes": 360847
+    },
+    "cafe": {
+      "file": "cafe.mp3",
+      "source": "https://commons.wikimedia.org/wiki/File:Cafe_ambiance.ogg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/5/54/Cafe_ambiance.ogg",
+      "creator": "Marble Toast",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Cafe field recording; excerpted, speech-range attenuated for indistinct chatter, encoded to MP3.",
+      "excerptStartSeconds": 240,
+      "excerptDurationSeconds": 30,
+      "sha256": "552e04360ba86368e25be5755700b5a12f669d5a7a0acde9f1521ad58883dcd8",
+      "bytes": 360847
+    },
+    "forest": {
+      "file": "forest.mp3",
+      "source": "https://opengameart.org/content/park-ambiences",
+      "originalFile": "https://opengameart.org/sites/default/files/park_ambience_birds.wav",
+      "creator": "Thimras",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Public park trees and birds field recording; excerpted and encoded to MP3.",
+      "excerptStartSeconds": 20,
+      "excerptDurationSeconds": 30,
+      "sha256": "6fcd2c2e4a15d2b65ac0e9506445a26f07e89f72297a6d3efaa183a8616856e2",
+      "bytes": 360915
+    },
+    "fireplace": {
+      "file": "fireplace.mp3",
+      "source": "https://opengameart.org/content/fireplace-sound-loop",
+      "originalFile": "https://opengameart.org/sites/default/files/fire.wav",
+      "creator": "PagDev",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Wood-burning fireplace recording; excerpted and encoded to MP3.",
+      "excerptStartSeconds": 0,
+      "excerptDurationSeconds": 30,
+      "sha256": "a467f7ac317b954d69ea447c59d62c2c23324a77680432778fdc9facb353a681",
+      "bytes": 352159
+    }
+  }
+}

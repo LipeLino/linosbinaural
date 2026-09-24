@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+.wrangler/
+.env*
+!.env.example
+!.env.test.example
+.dev.vars*
+!.dev.vars.example
+test-results/
+playwright-report/
+coverage/
+*.tsbuildinfo
+supabase/.temp/
+supabase/.branches/
+tmp/
+dist/

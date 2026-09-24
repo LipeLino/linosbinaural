@@ -1,0 +1,68 @@
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { BASE_PATH, STORAGE_PREFIX } from './mix';
+
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export const authAvailable = Boolean(url && anonKey);
+
+let client: SupabaseClient | null = null;
+export function getAuthClient(): SupabaseClient | null {
+  if (!authAvailable || typeof window === 'undefined') return null;
+  if (!client) client = createClient(url!, anonKey!, {
+    auth: {
+      storageKey: `${STORAGE_PREFIX}auth`,
+      storage: window.localStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce',
+    },
+  });
+  return client;
+}
+
+export function authRedirect(): string {
+  if (typeof window === 'undefined') throw new Error('Auth redirect requires a browser.');
+  return `${window.location.origin}${BASE_PATH}/account/`;
+}
+
+export async function accessToken(): Promise<string | null> {
+  const auth = getAuthClient();
+  if (!auth) return null;
+  const { data, error } = await auth.auth.getSession();
+  if (error) throw error;
+  return data.session?.access_token ?? null;
+}
+
+export async function signUp(email: string, password: string, locale: 'en' | 'pt' = 'en') {
+  const auth = getAuthClient();
+  if (!auth) throw new Error('Account service is not configured.');
+  return auth.auth.signUp({ email, password, options: { emailRedirectTo: authRedirect(), data: { locale } } });
+}
+export async function signIn(email: string, password: string) {
+  const auth = getAuthClient();
+  if (!auth) throw new Error('Account service is not configured.');
+  return auth.auth.signInWithPassword({ email, password });
+}
+export async function sendRecovery(email: string) {
+  const auth = getAuthClient();
+  if (!auth) throw new Error('Account service is not configured.');
+  return auth.auth.resetPasswordForEmail(email, { redirectTo: authRedirect() });
+}
+export async function updatePassword(password: string) {
+  const auth = getAuthClient();
+  if (!auth) throw new Error('Account service is not configured.');
+  return auth.auth.updateUser({ password });
+}
+export async function signOut(scope: 'global' | 'local' = 'global') {
+  const auth = getAuthClient();
+  if (!auth) return;
+  const { error } = await auth.auth.signOut({ scope });
+  if (error) throw error;
+}
+
+export async function forgetDeletedSession(): Promise<void> {
+  try { await signOut('local'); }
+  catch { /* Auth may already have removed the deleted user on the server. */ }
+  if (typeof window !== 'undefined') window.localStorage.removeItem(`${STORAGE_PREFIX}auth`);
+}

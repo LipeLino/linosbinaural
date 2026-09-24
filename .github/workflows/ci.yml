@@ -1,0 +1,41 @@
+﻿name: Verify application
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --global pnpm@11.5.2
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm check:env && pnpm test && pnpm build && pnpm check:secrets
+      - name: Production browser checks
+        shell: bash
+        run: |
+          pnpm preview > /tmp/linos-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8787/linosbinaural/ > /dev/null && break
+            sleep 1
+          done
+          pnpm test:e2e
+          node scripts/visual-check.mjs
+      - run: pnpm deploy:dry
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: local-verification
+          path: |
+            artifacts/final/
+            artifacts/playwright-results.json
+            playwright-report/
+          retention-days: 7

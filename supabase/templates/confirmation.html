@@ -1,0 +1,17 @@
+<!doctype html>
+<html><body style="font-family:Arial,sans-serif;line-height:1.5;color:#262a24;background:#f6f0df;padding:24px">
+  <main style="max-width:520px;margin:auto;background:#fffaf0;padding:24px;border:1px solid #baae91;border-radius:8px">
+    <p style="font-weight:bold">Lino's Binaural</p>
+    {{ if eq .Data.locale "pt" }}
+      <div lang="pt-BR"><h1 style="font-size:22px">Confirme seu e-mail</h1>
+      <p>Confirme seu endereço para salvar e compartilhar suas mixagens.</p>
+      <p><a href="{{ .ConfirmationURL }}">Confirmar e-mail</a></p>
+      <p>Se você não criou uma conta, ignore esta mensagem.</p></div>
+    {{ else }}
+      <div lang="en"><h1 style="font-size:22px">Confirm your email</h1>
+      <p>Confirm your address to save and share your mixes.</p>
+      <p><a href="{{ .ConfirmationURL }}">Confirm email</a></p>
+      <p>If you did not create an account, ignore this message.</p></div>
+    {{ end }}
+  </main>
+</body></html>

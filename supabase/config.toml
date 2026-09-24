@@ -1,0 +1,28 @@
+project_id = "linos-binaural"
+
+[api]
+port = 54331
+
+[db]
+port = 54332
+shadow_port = 54330
+
+[studio]
+port = 54333
+
+[inbucket]
+port = 54334
+smtp_port = 54335
+pop3_port = 54336
+
+[auth]
+site_url = "http://127.0.0.1:8787/linosbinaural/"
+additional_redirect_urls = ["http://127.0.0.1:8787/linosbinaural/account/", "http://127.0.0.1:3000/linosbinaural/account/", "http://localhost:3000/linosbinaural/account/"]
+
+[auth.email.template.confirmation]
+subject = "Confirm your email / Confirme seu e-mail — Lino's Binaural"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Reset your password / Redefina sua senha — Lino's Binaural"
+content_path = "./supabase/templates/recovery.html"

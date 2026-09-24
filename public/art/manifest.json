@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "creator": "Lino’s Binaural project",
+  "method": "Original procedural pixel artwork; scripts/generate-art.mjs",
+  "license": "CC0-1.0",
+  "grid": "Integer rectangles and stepped paths",
+  "assets": [
+    "listening-room.svg",
+    "mark.svg",
+    "cover-moon.svg",
+    "cover-shore.svg",
+    "cover-cafe.svg",
+    "cover-lantern.svg",
+    "cover-forest.svg",
+    "social.png"
+  ],
+  "socialSource": "scripts/social-card.mjs; original room and OFL Pixelify Sans"
+}
