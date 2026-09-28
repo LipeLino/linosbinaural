@@ -1,7 +1,7 @@
 ﻿import type { NextConfig } from "next";
 const config: NextConfig = {
   output: "export",
-  basePath: "/linosbinaural",
+  basePath: "/builds/linosbinaural",
   trailingSlash: true,
   images: { unoptimized: true },
   poweredByHeader: false,

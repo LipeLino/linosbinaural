@@ -18,6 +18,7 @@ import {
   type Mix,
 } from "@/lib/mix";
 import { api } from "@/lib/api";
+import { authAvailable } from "@/lib/auth";
 
 export function Slider({
   label,
@@ -299,7 +300,19 @@ export function SaveMixButton() {
         }}
         title={tr("Keep this little moment", "Guarde este momento")}
       >
-        {!session ? (
+        {!session && !authAvailable ? (
+          <>
+            <p>
+              {tr(
+                "Your mix is already kept on this device as you adjust it. Accounts and cloud libraries are not connected in this release.",
+                "Seu mix já fica guardado neste aparelho enquanto você faz ajustes. Contas e coleções na nuvem não estão conectadas nesta versão.",
+              )}
+            </p>
+            <button className="button primary" onClick={() => setOpen(false)}>
+              {tr("Got it", "Entendi")}
+            </button>
+          </>
+        ) : !session ? (
           <>
             <p>
               {tr(

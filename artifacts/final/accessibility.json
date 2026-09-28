@@ -90,15 +90,6 @@
     "violations": []
   },
   {
-    "name": "ad-free",
-    "layout": {
-      "width": 1280,
-      "scrollWidth": 1280,
-      "lang": "en"
-    },
-    "violations": []
-  },
-  {
     "name": "not-found",
     "layout": {
       "width": 1280,

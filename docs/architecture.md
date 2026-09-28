@@ -1,23 +1,15 @@
-# Architecture and decisions
+# Architecture
 
-## Selected deployment
+The shipped app is a static Next.js 16 App Router export with `basePath=/builds/linosbinaural`. Vercel project `linosbinaural` hosts the build. The portfolio project exposes it through an exact external rewrite and a bare-path trailing-slash redirect.
 
-Next.js App Router exports static public pages with basePath `/linosbinaural`. A small Cloudflare Worker owns `/linosbinaural/api/*`, security headers and the static asset binding. Supabase provides Auth and PostgreSQL. Stripe-hosted Checkout provides one-time purchases. The client Web Audio engine has no network dependency after its selected recordings are loaded.
+The client owns the active product behavior:
 
-This avoids shipping a server-rendered Next.js runtime into the Workers Free CPU/bundle envelope. It remains one application and one deployment, with no separate microservice or LLM runtime. Worker CPU, compressed size and route behavior must be measured before deployment. Free limits can constrain growth; no unlimited or perpetual-hosting promise.
+- Web Audio creates the two carrier tones and generated noise.
+- Five self-hosted recordings load only when their layers are enabled.
+- Local storage holds the guest draft and interface preferences.
+- React state preserves playback during internal navigation.
+- No service worker, server function, analytics SDK, ad SDK, account SDK session, or payment SDK participates in the guest release.
 
-The exact canonical path requires Cloudflare zone/routing access or a verified commercially permitted origin integration. No DNS or portfolio mutations are authorized until the account, plan and routing impact are verified. Vercel Hobby is not a commercial deployment destination.
+The canonical and fallback routes both apply CSP, MIME sniffing protection, framing denial, no-referrer, restrictive permissions, and cross-origin isolation headers. The portfolio-level rewrite repeats those headers because an external Vercel rewrite does not forward the upstream header set.
 
-## Runtime boundaries
-
-- Public shell, legal/evidence pages and artwork: static, cached.
-- Audio engine: independent of React, persistent root provider; no automatic playback.
-- Auth: Supabase browser SDK, namespaced local session. Browser-readable session material is part of this model; we do not claim HttpOnly protection. Same-origin portfolio XSS remains a shared-origin risk.
-- API: bearer authentication validated against Supabase; exact Origin checks for mutations, bounded payloads, validated schemas, no-store private/public-share results.
-- Database: RLS for ordinary user operations; explicit safe public share projection; privileged operations narrowly scoped.
-- Payments: trusted price configuration, raw-body signatures and transactional event/entitlement reconciliation.
-- Ads: disabled by default and blocked until entitlement and approved consent are resolved.
-
-## Environment isolation
-
-Local and automated tests use isolated test data. Live payments and real ads never run during tests. Public Supabase configuration is distinct from privileged Worker secrets. No client source maps or public debug routes.
+Supabase, account, sharing, report, entitlement, Stripe, and Cloudflare Worker source remains in the repository as dormant code. None of it is deployed by the current Vercel project. Enabling it would materially change the trust boundary and requires a separate threat model, secrets review, hosted integration tests, policy update, and production authorization.

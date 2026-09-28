@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useApp } from "./AppProvider";
 import {
@@ -20,8 +20,6 @@ export function AccountPage() {
     locale,
     session,
     authLoading,
-    entitled,
-    refreshEntitlement,
     setNotice,
   } = useApp();
   const [mode, setMode] = useState<
@@ -39,8 +37,6 @@ export function AccountPage() {
   const [error, setError] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [confirmation, setConfirmation] = useState("");
-  const [checkout, setCheckout] = useState("");
-  const attempted = useRef(false);
   useEffect(() => {
     const auth = getAuthClient();
     if (!auth) return;
@@ -71,7 +67,6 @@ export function AccountPage() {
   }, [session, profileRetry]);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("checkout") === "cancelled") setCheckout("cancelled");
     if (params.get("error"))
       setError(
         tr(
@@ -79,23 +74,7 @@ export function AccountPage() {
           "O link expirou ou é inválido. Solicite outro e-mail abaixo.",
         ),
       );
-    if (!session || attempted.current || params.get("checkout") !== "return")
-      return;
-    const id = params.get("session_id");
-    if (!id) {
-      setCheckout("unverified");
-      return;
-    }
-    attempted.current = true;
-    setCheckout("checking");
-    void api
-      .reconcileCheckout(id)
-      .then(async (result) => {
-        setCheckout(result.status);
-        await refreshEntitlement();
-      })
-      .catch(() => setCheckout("unverified"));
-  }, [session, refreshEntitlement, tr]);
+  }, [tr]);
   async function perform(action: () => Promise<void>) {
     setError("");
     setMessage("");
@@ -118,40 +97,6 @@ export function AccountPage() {
       setBusy(false);
     }
   }
-  const checkoutText: Record<string, [string, string]> = {
-    checking: [
-      "Checking your payment securely…",
-      "Verificando seu pagamento com segurança…",
-    ],
-    pending: [
-      "Your payment is still being confirmed. This page does not grant ad-free access; your account status below is authoritative.",
-      "Seu pagamento ainda está sendo confirmado. Esta página não libera acesso sem anúncios; o status da conta abaixo é o válido.",
-    ],
-    unverified: [
-      "We could not verify this payment. Try again or contact support; your account status below remains authoritative.",
-      "N\u00e3o foi poss\u00edvel verificar este pagamento. Tente novamente ou fale com o suporte; o status da conta abaixo continua sendo o v\u00e1lido.",
-    ],
-    paid: [
-      "Payment confirmed. Your current account status is shown below.",
-      "Pagamento confirmado. O status atual da conta aparece abaixo.",
-    ],
-    cancelled: [
-      "Checkout cancelled. You can keep listening for free.",
-      "Compra cancelada. Você pode continuar ouvindo grátis.",
-    ],
-    failed: [
-      "The payment was not completed. No ad-free access was granted.",
-      "O pagamento não foi concluído. O acesso sem anúncios não foi liberado.",
-    ],
-    refunded: [
-      "This purchase has been refunded.",
-      "Esta compra foi reembolsada.",
-    ],
-    disputed: [
-      "This purchase is under dispute. Contact support for help.",
-      "Esta compra está em disputa. Entre em contato com o suporte.",
-    ],
-  };
   return (
     <main id="main" className="content-page">
       <span className="eyebrow">
@@ -164,30 +109,6 @@ export function AccountPage() {
           "Guarde seus sons favoritos, onde quer que você ouça.",
         )}
       </p>
-      {checkout && (
-        <div className="status-message" role="status">
-          {tr(...(checkoutText[checkout] ?? checkoutText.pending))}
-          {(checkout === "pending" || checkout === "unverified") && (
-            <button
-              className="text-button"
-              disabled={busy}
-              onClick={() => {
-                void perform(async () => {
-                  const id = new URLSearchParams(window.location.search).get(
-                    "session_id",
-                  );
-                  if (id) {
-                    setCheckout((await api.reconcileCheckout(id)).status);
-                    await refreshEntitlement();
-                  }
-                });
-              }}
-            >
-              {tr("Check again", "Verificar novamente")}
-            </button>
-          )}
-        </div>
-      )}
       {authLoading ? (
         <p role="status">{tr("Opening your account…", "Abrindo sua conta…")}</p>
       ) : !authAvailable ? (
@@ -230,20 +151,10 @@ export function AccountPage() {
             </div>
             <p>{session.user.email}</p>
             <div className="status-message">
-              {entitled === null
-                ? tr(
-                    "Ad-free status is unresolved. Advertising stays off.",
-                    "O status sem anúncios está pendente. Os anúncios permanecem desativados.",
-                  )
-                : entitled
-                  ? tr(
-                      "Ad-free access is active on your account.",
-                      "O acesso sem anúncios está ativo na sua conta.",
-                    )
-                  : tr(
-                      "Free listening account. All sounds and controls are included.",
-                      "Conta gratuita. Todos os sons e controles estão incluídos.",
-                    )}
+              {tr(
+                "Free listening account. All sounds and controls are included.",
+                "Conta gratuita. Todos os sons e controles estão incluídos.",
+              )}
             </div>
             {profileState === "loading" && (
               <p role="status">
@@ -299,17 +210,14 @@ export function AccountPage() {
               <Link href="/library/" className="button secondary">
                 {tr("Open my library", "Abrir minha coleção")}
               </Link>
-              <Link href="/ad-free/" className="button secondary">
-                {tr("Ad-free access", "Acesso sem anúncios")}
-              </Link>
             </div>
           </section>
           <section className="content-panel">
             <h2>{tr("Your data, your choice", "Seus dados, sua escolha")}</h2>
             <p>
               {tr(
-                "Export your mixes as JSON, update your password, or permanently delete your account. Transaction records may be retained where required; see Privacy.",
-                "Exporte seus mixes em JSON, altere sua senha ou exclua sua conta permanentemente. Registros de transações podem ser mantidos quando necessário; consulte Privacidade.",
+                "Export your mixes as JSON, update your password, or permanently delete your account.",
+                "Exporte seus mixes em JSON, altere sua senha ou exclua sua conta permanentemente.",
               )}
             </p>
             <div className="button-row">

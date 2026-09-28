@@ -66,7 +66,7 @@ describe("sponsor privacy gate", () => {
     production: true,
     approved: true,
     name: "Configured sponsor",
-    image: "/linosbinaural/sponsors/approved.webp",
+    image: "/builds/linosbinaural/sponsors/approved.webp",
     url: "https://example.org",
   };
   const allowed = {
@@ -116,15 +116,15 @@ describe("isolated worker boundary", () => {
   });
   it("normalizes only the exact application path", async () => {
     const result = await worker.fetch(
-      new Request("https://mateuslino.com/linosbinaural"),
+      new Request("https://mateuslino.com/builds/linosbinaural"),
       env,
     );
     expect(result.status).toBe(308);
-    expect(result.headers.get("location")).toBe("/linosbinaural/");
+    expect(result.headers.get("location")).toBe("/builds/linosbinaural/");
   });
   it("fails closed for missing account services with no-store and security headers", async () => {
     const result = await worker.fetch(
-      new Request("https://mateuslino.com/linosbinaural/api/account"),
+      new Request("https://mateuslino.com/builds/linosbinaural/api/account"),
       env,
     );
     expect(result.status).toBe(503);

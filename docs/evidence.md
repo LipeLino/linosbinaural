@@ -29,16 +29,16 @@ The cold mobile-style run uses Chromium at 390x844, disabled cache, 4x CPU slowd
 
 Budgets after the first measured production build: <=400 KiB summed gzip for initial/prefetched JS in this harness; <=160 KiB Worker gzip; <=1.7 MiB total curated compressed recordings; no eager recording load before a gesture. Decoded cache <=3 entries and 64 MiB, excluding active buffers/browser internals. Investigate regressions, do not raise budgets automatically. Edge CPU and free-tier throughput remain launch measurements; local request latency cannot certify them.
 
-## Not executed / blocked
+## Not executed / outside the guest release
 
-- Account browser registration/confirmation/recovery/save/share/export/delete suite: automatic approval review rejected the exact delegated test write and cleanup twice; explicit user approval pending. Existing direct API evidence does not close that journey.
-- Hosted Supabase project/template/SMTP configuration, actual email delivery, real Stripe sandbox checkout/webhook/replay, cloud rate-limiter behavior, production deployment and canonical domain smoke checks.
+- Account browser registration/confirmation/recovery/save/share/export/delete journey. Accounts are disabled and excluded from the deployed product; earlier API evidence does not establish hosted readiness.
+- Hosted Supabase project/template/SMTP configuration, actual email delivery, real Stripe sandbox checkout/webhook/replay, and cloud rate-limiter behavior.
 - Human listening, cafe intelligibility, real headphone routing, screen-reader manual review, real mobile screen-lock/Bluetooth behavior, production metrics.
 - Remote CI run or remote Git publication. Local workflow code is not CI success.
 
 ## Environment/resources
 
-Empty repository at preflight. Windows, Node 26.3.0, pnpm 11.5.2, Git 2.54.0, Python 3.13.13, Supabase CLI 2.105.0. A dedicated **local** Docker Supabase project `linos-binaural` was created on ports 54331/54332/54334; three migrations applied. Ignored local keys were used without being committed. No hosted project, paid service, production account, or real charge/refund was created. Cloudflare unauthenticated; Vercel portfolio target verified read-only; Supabase organization/free-capacity ambiguity preserved existing projects.
+Empty repository at preflight. Windows, Node 26.3.0, pnpm 11.5.2, Git 2.54.0, Python 3.13.13, Supabase CLI 2.105.0. A dedicated **local** Docker Supabase project `linos-binaural` was created on ports 54331/54332/54334; three migrations applied. Ignored local keys were used without being committed. No hosted Supabase or payment service and no real charge/refund was created. The later guest release created an independent Vercel project and two exact portfolio routing rules.
 
 ## Completion audit follow-up
 
@@ -53,7 +53,7 @@ The final focused storage refinement passed 1/1 in 2.6 seconds after the last bu
 
 ## Tactile room refinement acceptance
 
-Local refinement decision: PASS for the requested guest room/guidance changes. Full product launch remains BLOCKED by the prior account-browser approval and provider/human acceptance gates. The exact guest-only browser test was initially rejected on the worker file boundary; the user explicitly approved that file, and only then was it written and executed. No account cleanup, privileged browser test or external launch action was included in that approval.
+Local refinement decision: PASS for the requested guest room/guidance changes. Accounts and payments remain excluded from the guest product rather than launch blockers. The exact guest-only browser test was initially rejected on the worker file boundary; the user explicitly approved that file, and only then was it written and executed. No account cleanup, privileged browser test or external launch action was included in that approval.
 
 | Method | Evidence status | Check and actual outcome | Artifacts / scope |
 | --- | --- | --- | --- |
@@ -70,4 +70,10 @@ The first full regression run was 20/22: two old locators assumed one Quiet Shor
 
 Reviewer: root assistant, with a bounded independent critique by the account worker. Environment: screenshots of the production-mode localhost Worker in headless Chromium on Windows, not physical touch devices or a human screen reader. Procedure: inspect scene/pet grounding, materials, primary playback placement, control readability, selected states, EN/PT line lengths, guide disclosures and mobile reflow. Root inspected 1440 night, 1280 day, 768 Portuguese day and 390 night compositions and both tour languages. Selected-button contrast was darkened after axe; tablet readout overlap was fixed after screenshot inspection even though page-overflow checks passed. Independent critique resulted in a direct player link, system-aware motion control scoped to decorations, and author/year citations. New assets are reproducible original SVGs in the CC0 manifest; no external sprites or new dependencies.
 
-Remaining risks: subjective comfort, perceived intuitiveness and real-device/screen-reader behavior still require people and hardware. Room motion can be paused independently of playback; system reduced-motion and hidden-tab handling remain effective. Scientific associations are explained as associations, not promised causal audio benefits, and each source is linked visibly. Broader launch blockers in dev-to-do.md are unchanged.
+Remaining risks: subjective comfort, perceived intuitiveness and real-device/screen-reader behavior still require people and hardware. Room motion can be paused independently of playback; system reduced-motion and hidden-tab handling remain effective. Scientific associations are explained as associations, not promised causal audio benefits, and each source is linked visibly.
+
+## Production release evidence — 2026-09-28
+
+The guest build was deployed as `dpl_7edQPBX5pyJkm9TvWdcXtZpePuwu` and mounted at https://www.mateuslino.com/builds/linosbinaural/. The local and public guest/guide suites each passed 22/22. The local and public visual sweeps each checked 19 states with no Axe WCAG A/AA findings or horizontal overflow. Public throttled Chromium measured 1,544 ms LCP, 258,231 summed gzip JavaScript bytes, 27 requests, and zero pre-gesture audio requests; this is controlled lab evidence, not field CWV.
+
+The first live release check found the external portfolio rewrite had dropped upstream security headers. The exact rewrite was amended to set CSP, nosniff, DENY framing, no-referrer, restrictive permissions, COOP, and CORP. The repeat check passed every assertion, recorded no third-party request from Lino's page, and confirmed the canonical, slash, apex, deep link, fallback, portfolio root, and Veranila paths.

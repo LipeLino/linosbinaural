@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-09-28T04:57:37.549Z",
+  "canonical": "https://www.mateuslino.com/builds/linosbinaural/",
+  "deploymentId": "dpl_7edQPBX5pyJkm9TvWdcXtZpePuwu",
+  "results": [
+    {
+      "name": "canonical",
+      "requestedUrl": "https://www.mateuslino.com/builds/linosbinaural/",
+      "finalUrl": "https://www.mateuslino.com/builds/linosbinaural/",
+      "status": 200,
+      "title": "Lino’s Binaural — your woodland listening room",
+      "consoleErrors": [],
+      "requestHosts": [
+        "www.mateuslino.com"
+      ],
+      "securityHeaders": {
+        "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-inline'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "no-referrer",
+        "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), browsing-topics=()",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin"
+      },
+      "thirdPartyRequests": []
+    },
+    {
+      "name": "canonical-slash",
+      "requestedUrl": "https://www.mateuslino.com/builds/linosbinaural",
+      "finalUrl": "https://www.mateuslino.com/builds/linosbinaural/",
+      "status": 200,
+      "title": "Lino’s Binaural — your woodland listening room",
+      "consoleErrors": [],
+      "requestHosts": [
+        "www.mateuslino.com"
+      ]
+    },
+    {
+      "name": "deep-link",
+      "requestedUrl": "https://www.mateuslino.com/builds/linosbinaural/how-it-works/",
+      "finalUrl": "https://www.mateuslino.com/builds/linosbinaural/how-it-works/",
+      "status": 200,
+      "title": "How it works · Lino’s Binaural",
+      "consoleErrors": [],
+      "requestHosts": [
+        "www.mateuslino.com"
+      ]
+    },
+    {
+      "name": "fallback",
+      "requestedUrl": "https://linosbinaural.vercel.app/builds/linosbinaural/",
+      "finalUrl": "https://linosbinaural.vercel.app/builds/linosbinaural/",
+      "status": 200,
+      "title": "Lino’s Binaural — your woodland listening room",
+      "consoleErrors": [],
+      "requestHosts": [
+        "linosbinaural.vercel.app"
+      ]
+    },
+    {
+      "name": "apex",
+      "requestedUrl": "https://mateuslino.com/builds/linosbinaural/",
+      "finalUrl": "https://www.mateuslino.com/builds/linosbinaural/",
+      "status": 200,
+      "title": "Lino’s Binaural — your woodland listening room",
+      "consoleErrors": [],
+      "requestHosts": [
+        "mateuslino.com",
+        "www.mateuslino.com"
+      ]
+    },
+    {
+      "name": "portfolio",
+      "requestedUrl": "https://www.mateuslino.com/",
+      "finalUrl": "https://www.mateuslino.com/?lang=en",
+      "status": 200,
+      "title": "Mateus Lino | Data Analyst & Full Stack Developer | Portfolio",
+      "consoleErrors": [],
+      "requestHosts": [
+        "www.mateuslino.com",
+        ""
+      ]
+    },
+    {
+      "name": "veranila",
+      "requestedUrl": "https://www.mateuslino.com/builds/veranila/",
+      "finalUrl": "https://www.mateuslino.com/builds/veranila/",
+      "status": 200,
+      "title": "Veranila · Visão geral",
+      "consoleErrors": [],
+      "requestHosts": [
+        "www.mateuslino.com",
+        "tile.openstreetmap.org"
+      ]
+    }
+  ],
+  "failures": []
+}

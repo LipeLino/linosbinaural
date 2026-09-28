@@ -57,7 +57,5 @@ export const api = {
     return result;
   },
   entitlement: () => call<Entitlement>('/entitlement'),
-  checkout: (currency: 'usd' | 'brl') => call<{ url: string; sessionId: string }>('/checkout', { method: 'POST', body: JSON.stringify({ currency }) }),
-  reconcileCheckout: (sessionId: string) => call<{ status: 'pending' | 'paid' | 'refunded' | 'disputed' | 'failed' }>('/checkout/reconcile', { method: 'POST', body: JSON.stringify({ sessionId }) }),
   report: (token: string, reason: 'copyright' | 'abuse' | 'privacy' | 'other', details: string) => call<{ accepted: true }>('/reports', { method: 'POST', body: JSON.stringify({ token, reason, details }) }, true),
 };

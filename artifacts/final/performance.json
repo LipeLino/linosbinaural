@@ -1,10 +1,10 @@
 {
-  "lcpMs": 1212,
-  "domContentLoadedMs": 2655.89999999851,
+  "lcpMs": 1544,
+  "domContentLoadedMs": 3434.7000000029802,
   "heapBytes": 10000000,
-  "jsBytes": 1229943,
-  "jsGzip": 338404,
-  "requests": 35,
+  "jsBytes": 934421,
+  "jsGzip": 258231,
+  "requests": 27,
   "audioRequestsBeforeGesture": 0,
   "conditions": "Chromium, cold cache, 390x844, 4x CPU slowdown, 80ms latency, 500000 bytes/s download; local Worker, not field CWV."
 }

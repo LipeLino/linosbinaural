@@ -27,12 +27,12 @@ const server = createServer(async (req, res) => {
     );
     return;
   }
-  if (!req.url?.startsWith("/linosbinaural/audio/")) {
+  if (!req.url?.startsWith("/builds/linosbinaural/audio/")) {
     res.writeHead(404);
     res.end();
     return;
   }
-  const name = req.url.slice("/linosbinaural/audio/".length);
+  const name = req.url.slice("/builds/linosbinaural/audio/".length);
   if (!/^[a-z0-9._-]+$/i.test(name)) {
     res.writeHead(400);
     res.end();
@@ -79,7 +79,7 @@ try {
     for (const rate of sampleRates) {
       const context = new OfflineAudioContext(2, rate * 2, rate);
       await context.audioWorklet.addModule(
-        "/linosbinaural/audio/output-guard.js",
+        "/builds/linosbinaural/audio/output-guard.js",
       );
       const merger = context.createChannelMerger(2);
       const left = context.createOscillator();
@@ -113,7 +113,7 @@ try {
       });
     }
     const bound = new OfflineAudioContext(2, 48000, 48000);
-    await bound.audioWorklet.addModule("/linosbinaural/audio/output-guard.js");
+    await bound.audioWorklet.addModule("/builds/linosbinaural/audio/output-guard.js");
     const source = bound.createConstantSource();
     source.offset.value = 2;
     const guard = new AudioWorkletNode(bound, "lino-output-guard", {
@@ -126,7 +126,7 @@ try {
       ...Array.from(output.getChannelData(0), Math.abs),
     );
     const stack = new OfflineAudioContext(2, 48000, 48000);
-    await stack.audioWorklet.addModule("/linosbinaural/audio/output-guard.js");
+    await stack.audioWorklet.addModule("/builds/linosbinaural/audio/output-guard.js");
     const stackGuard = new AudioWorkletNode(stack, "lino-output-guard", {
       outputChannelCount: [2],
     });
@@ -148,7 +148,7 @@ try {
     for (const color of ["white", "pink", "brown"]) {
       const ctx = new OfflineAudioContext(2, 24000, 48000);
       await ctx.audioWorklet.addModule(
-        "/linosbinaural/audio/noise-processor.js",
+        "/builds/linosbinaural/audio/noise-processor.js",
       );
       const node = new AudioWorkletNode(ctx, "lino-noise", {
         processorOptions: { color },

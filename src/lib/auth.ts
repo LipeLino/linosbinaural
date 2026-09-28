@@ -3,7 +3,8 @@ import { BASE_PATH, STORAGE_PREFIX } from "./mix";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-export const authAvailable = Boolean(url && anonKey);
+const guestOnly = process.env.NEXT_PUBLIC_GUEST_ONLY === "true";
+export const authAvailable = !guestOnly && Boolean(url && anonKey);
 
 // Some privacy modes throw even when reading the localStorage property.
 // Retain a same-tab session when persistence is unavailable; listening must work.

@@ -4,7 +4,7 @@ import { ApiError, body, configured, guarded, json, rateLimit, requireOrigin } f
 import { db, userFromRequest } from './supabase';
 import { createCheckout, handleStripeWebhook, reconcileCheckout } from './payments';
 
-const prefix = '/linosbinaural/api';
+const prefix = '/builds/linosbinaural/api';
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const tokenPattern = /^[0-9a-f]{48}$/i;
 const mixSelect = 'id,title,description,definition,share_token,published_at,created_at,updated_at';
@@ -71,7 +71,7 @@ export function handleApi(request: Request, env: Env): Promise<Response> {
       const action = match[2];
       if (action === 'publish' && request.method === 'POST') {
         const shareToken = await db(env, 'rpc/publish_mix', { method: 'POST', token, body: { mix_id: id } });
-        return json({ shareToken, url: `${env.PUBLIC_ORIGIN}/linosbinaural/shared/?token=${shareToken}` });
+        return json({ shareToken, url: `${env.PUBLIC_ORIGIN}/builds/linosbinaural/shared/?token=${shareToken}` });
       }
       if (action === 'unpublish' && request.method === 'POST') {
         await db(env, 'rpc/unpublish_mix', { method: 'POST', token, body: { mix_id: id } });

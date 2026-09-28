@@ -13,7 +13,7 @@ export function validSponsor(config: SponsorConfig) {
     !config.approved ||
     !config.name.trim() ||
     config.name.length > 100 ||
-    !/^\/linosbinaural\/sponsors\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(
+    !/^\/builds\/linosbinaural\/sponsors\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(
       config.image,
     )
   )
@@ -39,7 +39,7 @@ export function shouldShowSponsor({
 }) {
   return (
     validSponsor(config) &&
-    host === "mateuslino.com" &&
+    ["mateuslino.com", "www.mateuslino.com"].includes(host) &&
     !authLoading &&
     entitled === false &&
     consent === "allow"

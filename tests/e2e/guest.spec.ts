@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { DEFAULT_MIX } from "../../src/lib/mix";
 
-const HOME = "/linosbinaural/";
+const HOME = "/builds/linosbinaural/";
 const validLookingToken = "a".repeat(48);
 
 test("restores a local draft without starting sound", async ({ page }) => {
@@ -139,7 +139,7 @@ test("keeps playback through internal navigation", async ({ page }) => {
     { timeout: 15_000 },
   );
   await page.getByRole("link", { name: "How it works" }).click();
-  await expect(page).toHaveURL(/\/linosbinaural\/how-it-works\/?$/);
+  await expect(page).toHaveURL(/\/builds\/linosbinaural\/how-it-works\/?$/);
   await page
     .getByRole("link", { name: /Lino’s Binaural/ })
     .first()
@@ -202,7 +202,10 @@ test("guest save dialog traps focus and closes with Escape without claiming a sa
   const bounds = await dialog.boundingBox();
   expect(bounds?.x).toBeGreaterThan(0);
   expect(bounds?.y).toBeGreaterThan(0);
-  await expect(dialog.getByText("Sign in to save private mixes")).toBeVisible();
+  await expect(
+    dialog.getByText("Your mix is already kept on this device"),
+  ).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Got it" })).toBeVisible();
   for (let i = 0; i < 6; i++) {
     await page.keyboard.press("Tab");
     expect(
@@ -222,7 +225,7 @@ test("guest save dialog traps focus and closes with Escape without claiming a sa
 test("account availability reflects the build configuration and keeps listening reachable", async ({
   page,
 }) => {
-  await page.goto("/linosbinaural/account/");
+  await page.goto("/builds/linosbinaural/account/");
   const unavailable = page.getByRole("heading", {
     name: "The listening room is open.",
   });
@@ -255,14 +258,14 @@ test("account availability reflects the build configuration and keeps listening 
 test("invalid and revoked-looking share links disclose no private mix", async ({
   page,
 }) => {
-  await page.goto("/linosbinaural/shared/?token=invalid");
+  await page.goto("/builds/linosbinaural/shared/?token=invalid");
   await expect(
     page.getByRole("heading", { name: "This record is unavailable" }),
   ).toBeVisible();
   await expect(
     page.getByText("Private mixes are never shown here."),
   ).toBeVisible();
-  await page.goto(`/linosbinaural/shared/?token=${validLookingToken}`);
+  await page.goto(`/builds/linosbinaural/shared/?token=${validLookingToken}`);
   await expect(
     page.getByRole("heading", { name: "This record is unavailable" }),
   ).toBeVisible();
@@ -301,7 +304,7 @@ test("production shell sends no ad requests or hydration, CSP, and required-asse
   page.on("response", (response) => {
     if (
       response.status() >= 400 &&
-      /\/linosbinaural\/(?:_next|art|audio)\//.test(
+      /\/builds\/linosbinaural\/(?:_next|art|audio)\//.test(
         new URL(response.url()).pathname,
       )
     )
@@ -357,10 +360,7 @@ test("persistent player localizes factory titles after a language change", async
   await page.goto(HOME);
   await page.locator(".language-button").click();
   await page.getByRole("button", { name: /Reproduzir/ }).click();
-  await page
-    .getByRole("link", { name: /Minha cole/ })
-    .first()
-    .click();
+  await page.getByRole("link", { name: "Como funciona" }).click();
   await expect(page.locator(".player-dock strong")).toHaveText("Chuva ao luar");
   await page.locator(".language-button").click();
   await expect(page.locator(".player-dock strong")).toHaveText("Moonlit Rain");

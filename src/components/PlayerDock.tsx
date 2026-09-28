@@ -23,7 +23,7 @@ export function PlayerDock() {
       : record.pt
     : title;
   if (audio.status === "idle" || audio.status === "error") return null;
-  const home = path === "/" || path === "/linosbinaural/";
+  const home = path === "/" || path === "/builds/linosbinaural/";
   return (
     <aside
       className={`player-dock ${home ? "home-dock" : ""}`}

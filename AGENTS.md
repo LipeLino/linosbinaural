@@ -1,23 +1,10 @@
-# Lino’s Binaural
+# Repository guidance
 
-Build the attached product specification in this repository. English development/documentation; English and Brazilian Portuguese UI.
-
-- Single Next.js App Router static frontend under `/linosbinaural`; one small Cloudflare Worker serves APIs and static assets. No paid resources without authorization. Never alter the portfolio or unrelated routes.
-- Audio correctness first: centered carrier, strictly separate ears, conservative gain, explicit gestures, smooth changes, timeline-based timers, real output protection. Never make medical or guaranteed cognition claims.
-- All listening free. Account-owned one-time ad-free purchase USD 5 / BRL 20. Entitlements come only from verified transactional server processing. Ads disabled without approved configuration and compliant consent.
-- Private mixes by default; strict validation, RLS, safe public projection, revocable sharing, no shared caching of user responses. Never expose secrets.
-- Root owns visual design, shared contracts, integration, package files and commits. At most two active workers. No recursive delegation. Workers edit only assigned paths.
-- Keep `docs/progress.md`, `docs/evidence.md`, `docs/dev-to-do.md`, and `docs/launch-checklist.md` accurate. Distinguish implemented, locally verified, sandbox verified, live verified, and externally blocked.
-- Run relevant tests, production build, browser checks and secret checks before coherent commits. Never invent test or deployment success.
-
-Detailed decisions: `docs/product.md`, `docs/design.md`, `docs/architecture.md`, `docs/threat-model.md`. Original full brief: `docs/product-specification.txt`.
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+- The current public product is a guest-only static Next.js app under `/builds/linosbinaural/`.
+- Keep all listening free. Do not enable accounts, cloud saving, billing, tips, analytics, or ads without an explicit owner request and a new release review.
+- Preserve the cautious evidence language. Frequency names describe audio settings and are not treatment or guaranteed-benefit claims.
+- Preserve English and Brazilian Portuguese, keyboard access, reduced motion, responsive layouts, and the user-gesture audio boundary.
+- Keep secrets out of client bundles and tracked files. Production builds use `NEXT_PUBLIC_GUEST_ONLY=true`, `NEXT_PUBLIC_ADS_ENABLED=false`, and `NEXT_PUBLIC_CHECKOUT_ENABLED=false`.
+- The canonical app is routed by the portfolio Vercel project. Limit routing changes to this exact subpath and verify the portfolio root and Veranila after any route publication.
+- The current Vercel Hobby deployment must remain non-commercial. Upgrade the team or move hosting before enabling tips or advertising.
+- Treat Worker, Supabase, sharing, entitlement, and Stripe code as dormant legacy implementation. It needs a separate security and operational review before deployment.

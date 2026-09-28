@@ -10,7 +10,11 @@ await writeFile(
     {
       builtAt: new Date().toISOString(),
       appEnvironment: buildEnv.NEXT_PUBLIC_APP_ENV || "development",
-      supabaseOrigin: buildEnv.NEXT_PUBLIC_SUPABASE_URL || null,
+      guestOnly: buildEnv.NEXT_PUBLIC_GUEST_ONLY === "true",
+      supabaseOrigin:
+        buildEnv.NEXT_PUBLIC_GUEST_ONLY === "true"
+          ? null
+          : buildEnv.NEXT_PUBLIC_SUPABASE_URL || null,
       adsEnabled: buildEnv.NEXT_PUBLIC_ADS_ENABLED === "true",
       checkoutEnabled: buildEnv.NEXT_PUBLIC_CHECKOUT_ENABLED === "true",
     },
@@ -23,8 +27,8 @@ const root = resolve("."),
 if (dest !== join(root, "dist") || !dest.startsWith(root))
   throw new Error("Unsafe build destination");
 await rm(dest, { recursive: true, force: true });
-await mkdir("dist/linosbinaural", { recursive: true });
-await cp("out", "dist/linosbinaural", { recursive: true, force: true });
+await mkdir("dist/builds/linosbinaural", { recursive: true });
+await cp("out", "dist/builds/linosbinaural", { recursive: true, force: true });
 const manifest = {};
 async function walk(dir) {
   for (const item of await readdir(dir, { withFileTypes: true })) {
@@ -44,7 +48,8 @@ async function walk(dir) {
           );
       }
       let path =
-        "/linosbinaural/" + relative("out", full).replaceAll("\\", "/");
+        "/builds/linosbinaural/" +
+        relative("out", full).replaceAll("\\", "/");
       if (path.endsWith("index.html")) path = path.slice(0, -10);
       manifest[path] = [...new Set(hashes)];
     }
@@ -69,7 +74,7 @@ async function normalizeSegmentFiles(dir) {
       if (start >= 0 && rel.slice(start).includes("/")) {
         const flat =
           rel.slice(0, start) + rel.slice(start).replaceAll("/", ".");
-        await cp(full, join("dist/linosbinaural", flat));
+        await cp(full, join("dist/builds/linosbinaural", flat));
       }
     }
   }

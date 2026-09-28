@@ -25,5 +25,5 @@ it('loads every private mix page while preserving the library array contract', a
   const mixes = await api.listMixes();
   expect(mixes).toHaveLength(101);
   expect(mixes[100].title).toBe('Mix 100');
-  expect(calls).toEqual(['/linosbinaural/api/mixes?offset=0', '/linosbinaural/api/mixes?offset=100']);
+  expect(calls).toEqual(['/builds/linosbinaural/api/mixes?offset=0', '/builds/linosbinaural/api/mixes?offset=100']);
 });

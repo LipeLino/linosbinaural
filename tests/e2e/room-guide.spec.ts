@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { FACTORY_PRESETS } from "../../src/lib/mix";
 
-const HOME = "/linosbinaural/";
+const HOME = "/builds/linosbinaural/";
 
 test("five starting points load complete factory mixes without sound or master-volume changes", async ({
   page,

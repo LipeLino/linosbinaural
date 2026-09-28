@@ -55,7 +55,7 @@ export async function createCheckout(request: Request, env: Env, user: User, tok
   const rows = await db(env, `entitlements?select=ad_free&environment=eq.${env.STRIPE_MODE}&limit=1`, { token });
   if ((rows as any[])[0]?.ad_free === true) throw new ApiError(409, 'already_entitled', 'Your account is already ad-free.');
   const price = await assertPrice(env, currency);
-  const returnPath = `${env.PUBLIC_ORIGIN}/linosbinaural/account/`;
+  const returnPath = `${env.PUBLIC_ORIGIN}/builds/linosbinaural/account/`;
   const form = new URLSearchParams({
     mode: 'payment',
     'line_items[0][price]': price,

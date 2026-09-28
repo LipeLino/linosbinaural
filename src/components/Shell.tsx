@@ -7,6 +7,7 @@ import { PixelIcon } from "./PixelIcon";
 import { PrivacyPreferences } from "./SponsorSlot";
 import { PlayerDock } from "./PlayerDock";
 import { assetPath } from "@/lib/mix";
+import { authAvailable } from "@/lib/auth";
 export function Shell({ children }: { children: React.ReactNode }) {
   const { tr, locale, setLocale, theme, setTheme, session, online, notice } =
     useApp();
@@ -36,12 +37,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           <nav aria-label={tr("Main navigation", "Navegação principal")}>
-            <Link
-              className={pathname.includes("library") ? "active" : ""}
-              href="/library/"
-            >
-              {tr("My library", "Minha coleção")}
-            </Link>
+            {authAvailable && (
+              <Link
+                className={pathname.includes("library") ? "active" : ""}
+                href="/library/"
+              >
+                {tr("My library", "Minha coleção")}
+              </Link>
+            )}
             <Link href="/how-it-works/">
               {tr("How it works", "Como funciona")}
             </Link>
@@ -65,18 +68,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
             >
               <PixelIcon name={theme === "night" ? "sun" : "moon"} />
             </button>
-            <Link
-              className="button small secondary account-link"
-              aria-label={
-                session ? tr("Account", "Conta") : tr("Sign in", "Entrar")
-              }
-              href="/account/"
-            >
-              <PixelIcon name="user" size={15} />
-              <span>
-                {session ? tr("Account", "Conta") : tr("Sign in", "Entrar")}
-              </span>
-            </Link>
+            {authAvailable && (
+              <Link
+                className="button small secondary account-link"
+                aria-label={
+                  session ? tr("Account", "Conta") : tr("Sign in", "Entrar")
+                }
+                href="/account/"
+              >
+                <PixelIcon name="user" size={15} />
+                <span>
+                  {session ? tr("Account", "Conta") : tr("Sign in", "Entrar")}
+                </span>
+              </Link>
+            )}
           </div>
         </div>
       </header>
@@ -105,7 +110,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <Link href="/terms/">{tr("Terms", "Termos")}</Link>
           <Link href="/credits/">{tr("Credits", "Créditos")}</Link>
           <Link href="/support/">{tr("Support", "Suporte")}</Link>
-          <Link href="/ad-free/">{tr("Go ad-free", "Sem anúncios")}</Link>
+          <Link href="/support/#tip-jar">
+            {tr("Tip jar · later", "Gorjeta · em breve")}
+          </Link>
         </nav>
         <PrivacyPreferences />
         <p>

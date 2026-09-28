@@ -11,7 +11,7 @@ export default defineConfig({
     ["json", { outputFile: "artifacts/playwright-results.json" }],
   ],
   use: {
-    baseURL: "http://127.0.0.1:8787",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:8787",
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
     headless: true,

@@ -25,7 +25,7 @@ function walk(path) {
     else files.add(p);
   }
 }
-walk("dist/linosbinaural");
+walk("dist/builds/linosbinaural");
 const extensions = new Set([
   ".ts",
   ".tsx",

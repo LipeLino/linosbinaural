@@ -133,8 +133,8 @@ if (enabled("NEXT_PUBLIC_ADS_ENABLED")) {
   );
   const image = e.NEXT_PUBLIC_SPONSOR_IMAGE || "";
   check(
-    /^\/linosbinaural\/sponsors\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(image) &&
-      existsSync("public/" + image.replace("/linosbinaural/", "")),
+    /^\/builds\/linosbinaural\/sponsors\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(image) &&
+      existsSync("public/" + image.replace("/builds/linosbinaural/", "")),
     "Sponsor creative must be a real local approved image.",
   );
 }

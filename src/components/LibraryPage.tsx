@@ -222,7 +222,7 @@ export function LibraryPage() {
                     setPublishing(record);
                     setShareUrl(
                       record.shareToken
-                        ? `${window.location.origin}/linosbinaural/shared/?token=${record.shareToken}`
+                        ? `${window.location.origin}/builds/linosbinaural/shared/?token=${record.shareToken}`
                         : "",
                     );
                   }}

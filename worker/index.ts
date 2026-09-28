@@ -1,7 +1,7 @@
 ﻿import { handleApi } from "./api";
 import type { Env } from "./env";
 import manifest from "./csp.generated.json";
-const BASE = "/linosbinaural";
+const BASE = "/builds/linosbinaural";
 type DeployEnv = Env & { APP_ENV?: string };
 export function securityHeaders(path: string, env: DeployEnv) {
   const headers = new Headers();

@@ -27,7 +27,7 @@ type Layer = {
 };
 type Manifest = { version: number; assets: Partial<Record<AmbienceId, { file: string }>> };
 
-const BASE = "/linosbinaural/audio/";
+const BASE = "/builds/linosbinaural/audio/";
 const SLEW = 0.06;
 const CACHE_LIMIT_BYTES = 64 * 1024 * 1024;
 const CACHE_LIMIT_ITEMS = 3;

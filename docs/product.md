@@ -1,9 +1,11 @@
-# Product contract
+# Product
 
-Lino’s Binaural is a free listening desk: binaural tones, eight ambient layers, a session timer and a shelf of mixes. Account features save private mixes, explicitly publish revocable links, export/delete data, and restore one-time ad-free access across devices. English and Brazilian Portuguese are equally supported.
+Lino's Binaural is a free woodland listening room at https://www.mateuslino.com/builds/linosbinaural/. It combines binaural tones, eight ambience layers, five complete starting mixes, a timer, original pixel pets, and a bilingual frequency field guide.
 
-No clinical promises. Presets are suggested starting points. Stereo headphones are required for the binaural effect; ambience alone works without them. Mixer percentages are not sound pressure measurements.
+The September 28, 2026 release is guest-only. The current mix, language, theme, and motion preference stay in browser local storage. Audio starts only after a user gesture. There is no account, cloud library, billing, tip provider, analytics, or advertising network in the public build.
 
-Canonical location: https://mateuslino.com/linosbinaural. This project must not replace the existing portfolio. Missing external credentials must disable the relevant service honestly, while the complete guest player continues working.
+The experience explains the common associations for Delta, Theta, Alpha, Beta, and gamma-range settings while stating the evidence limits. Labels describe the selected frequency difference; they do not measure the listener or promise sleep, focus, calm, treatment, or another health outcome.
 
-See product-specification.txt for the original, complete acceptance contract.
+English and Brazilian Portuguese, keyboard access, reduced motion, day/night themes, and layouts from narrow mobile through desktop are release requirements.
+
+Future monetization should begin with a simple external tip link after commercial hosting is in place. Listening remains free. Advertising, if later approved, should use one restrained placement and require a separate privacy, consent, CSP, and visual review.

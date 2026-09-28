@@ -2,8 +2,8 @@ import { chromium } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 import { gzipSync } from "node:zlib";
-const origin = "http://127.0.0.1:8787",
-  home = origin + "/linosbinaural/";
+const origin = process.env.CHECK_ORIGIN || "http://127.0.0.1:8787",
+  home = origin + "/builds/linosbinaural/";
 await mkdir("artifacts/final", { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const reports = [];
@@ -73,17 +73,20 @@ try {
   await page.getByRole("button", { name: "Save mix", exact: true }).click();
   await inspect(page, "save-dialog");
   await page.keyboard.press("Escape");
-  await page
-    .getByRole("button", { name: "Privacy preferences", exact: true })
-    .click();
-  await inspect(page, "privacy-dialog");
-  await page.keyboard.press("Escape");
+  const privacyButton = page.getByRole("button", {
+    name: "Privacy preferences",
+    exact: true,
+  });
+  if (await privacyButton.isVisible().catch(() => false)) {
+    await privacyButton.click();
+    await inspect(page, "privacy-dialog");
+    await page.keyboard.press("Escape");
+  }
   for (const [path, name] of [
     ["library/", "library-guest"],
     ["account/", "account"],
     ["shared/?token=invalid", "share-unavailable"],
     ["evidence/", "evidence"],
-    ["ad-free/", "ad-free"],
     ["missing-page/", "not-found"],
   ]) {
     await page.goto(home + path);
@@ -204,7 +207,9 @@ try {
       /\/audio\/.*\.(mp3|wav|ogg)/.test(x),
     ).length,
     conditions:
-      "Chromium, cold cache, 390x844, 4x CPU slowdown, 80ms latency, 500000 bytes/s download; local Worker, not field CWV.",
+      "Chromium, cold cache, 390x844, 4x CPU slowdown, 80ms latency, 500000 bytes/s download; " +
+      origin +
+      ", not field CWV.",
   };
   await writeFile(
     "artifacts/final/performance.json",

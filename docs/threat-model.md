@@ -1,20 +1,25 @@
 # Threat model
 
-## Boundaries and assets
+## Shipped scope
 
-The shared origin also serves the portfolio. `/linosbinaural` is a route boundary, not a browser security boundary; a script injected anywhere on the origin could access browser-readable Supabase session storage. Protect the whole origin against XSS and avoid untrusted HTML. Private mixes, email, purchases, and entitlement state reside in Supabase. Stripe secrets and service-role credentials exist only in the Worker environment. Static artwork/audio is public.
+The public app is a static guest-only site under the shared `www.mateuslino.com` origin. It stores a draft mix and interface preferences in local storage. It does not hold credentials, account sessions, private cloud data, payment data, analytics identifiers, or advertising identifiers.
 
-## Main abuse paths and controls
+## Controls
 
-- **Account or mix access:** The Worker validates access tokens against Supabase Auth for each protected request. User data uses the caller token and RLS owner policies; DB grants deny ordinary users purchase and entitlement writes. Server and SQL validate mix envelopes, fixed ambience IDs, lengths, and numeric ranges. Public pages receive a narrow security-definer projection keyed by a high-entropy, revocable token. Responses use `no-store`.
-- **Cross-origin requests:** Mutations require an exact configured `Origin`; sessions are sent in Authorization headers, not ambient cookies. The Worker also checks `Sec-Fetch-Site` when present. Browser session storage is namespaced, and the auth redirect is fixed to a trusted same-origin path. XSS remains the principal session theft risk; output must be rendered as text, not user HTML.
-- **Abuse/spam:** Fixed-size streamed body limits with cancellation (including absent or understated Content-Length), format validation, and Cloudflare's native rate-limit binding bound expensive routes. Anonymous reports accept only known reason codes, 500-character detail, and a currently published share token. Direct Supabase RPC calls are capped transactionally at 10 reports per share token per day; the Worker limiter adds actor throttling. The binding is location-local and eventually consistent, so it is not a strict global quota.
-- **Payment fraud:** New Checkout uses only configured active Stripe price IDs. Historical sessions are tied to this app through Stripe metadata and checked against the actual one-time product, currency, and amount, even if the original price is archived. The Worker verifies price product, one-time type, currency, and amount with Stripe. Raw webhook HMAC verification precedes processing. Event IDs are unique; status, purchase, and entitlement update in one SQL transaction. Server-side reconciliation reads current Stripe state and checks Checkout ownership. Success URLs and local storage cannot grant access. The service-role key never enters browser bundles.
-- **Refund and dispute ordering:** Purchase rows track the newest event timestamp and favor revocation at equal timestamps. Early refund/dispute events create a row keyed by payment intent so a later, older completion cannot revive entitlement. A successful reconciliation checks the latest charge for refund/dispute status. Operational review is still needed for unusual processor histories or a deleted account.
-- **Ads and shared domain:** Ad scripts must remain disabled until provider approval, configured consent, and entitlement resolution. The Worker does not insert ad script. CSP and other subpath headers are set by the integration Worker; validate them in a production build and check that they do not alter unrelated portfolio routes.
+- Audio starts only after a user gesture and no recording is requested before it is enabled.
+- React renders owned strings and fixed data; the app does not inject user HTML.
+- CSP denies all sources by default and allows only same-origin scripts, styles, fonts, images, audio, and workers. Frames, objects, script attributes, and form submissions are blocked.
+- `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, restrictive `Permissions-Policy`, COOP, and CORP are verified on the canonical response.
+- The production page made requests only to `www.mateuslino.com`; no analytics, ad, payment, or other third-party script ran.
+- Exact routing rules limit the external rewrite to `/builds/linosbinaural/`.
+- Dependencies are exactly locked. Only the exact locked `esbuild` and `workerd` packages may run install scripts.
+- Secret scanning covers tracked candidate files; `.env.local`, `.dev.vars`, and `.vercel` remain ignored.
 
-## Residual limits
+## Residual risks
 
-Account export is paged and account deletion cascades private mixes/profile/entitlement rows; payment transaction references remain deidentified in the app database with `user_id` set null. A previously downloaded public mix cannot be recalled. All three migrations, RLS owner policies, safe public projection, direct RPC report cap, and payment transaction function passed embedded PostgreSQL tests. An isolated local Supabase Auth/PostgREST stack additionally passed anonymous, two-user, and service-role integration checks. Hosted Supabase, actual confirmation/recovery delivery, Cloudflare's deployed rate-limit binding, and Stripe sandbox webhooks remain unverified.
+- The static Next.js response currently needs `'unsafe-inline'` for hydration. Other CSP directives and React escaping reduce exposure, but this is weaker than a per-response nonce or a complete script hash policy.
+- A path is not a browser security boundary. An origin-wide script injection in the portfolio could reach Lino's local storage. Keep the entire shared origin free of untrusted HTML and third-party script sprawl.
+- Browser automation does not prove behavior on every physical device, assistive technology, headphone, or audio system.
+- The dormant Worker, Supabase, sharing, report, entitlement, and Stripe paths have broader trust boundaries. They are not production-approved by this review.
 
-When browser persistence is denied, auth storage falls back only to the current tab. Registration/recovery redirects may require enabling persistent storage for the PKCE verifier; no cross-page persistence is promised in that restricted mode. Free playback remains usable and has a real browser regression.
+No high or critical finding remained open after the canonical header remediation.

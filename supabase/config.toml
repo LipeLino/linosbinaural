@@ -16,8 +16,8 @@ smtp_port = 54335
 pop3_port = 54336
 
 [auth]
-site_url = "http://127.0.0.1:8787/linosbinaural/"
-additional_redirect_urls = ["http://127.0.0.1:8787/linosbinaural/account/", "http://127.0.0.1:3000/linosbinaural/account/", "http://localhost:3000/linosbinaural/account/"]
+site_url = "http://127.0.0.1:8787/builds/linosbinaural/"
+additional_redirect_urls = ["http://127.0.0.1:8787/builds/linosbinaural/account/", "http://127.0.0.1:3000/builds/linosbinaural/account/", "http://localhost:3000/builds/linosbinaural/account/"]
 
 [auth.email.template.confirmation]
 subject = "Confirm your email / Confirme seu e-mail — Lino's Binaural"

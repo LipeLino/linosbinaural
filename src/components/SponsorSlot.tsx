@@ -92,7 +92,7 @@ export function SponsorSlot() {
   }, []);
   if (
     !validSponsor(sponsorConfig) ||
-    host !== "mateuslino.com" ||
+    !["mateuslino.com", "www.mateuslino.com"].includes(host) ||
     authLoading ||
     entitled !== false
   )

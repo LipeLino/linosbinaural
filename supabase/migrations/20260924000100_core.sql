@@ -33,11 +33,11 @@ create table public.ambience_assets (
 );
 insert into public.ambience_assets(id,kind,path,license) values
   ('white','procedural',null,null), ('pink','procedural',null,null), ('brown','procedural',null,null),
-  ('rain','recording','/linosbinaural/audio/rain.mp3','CC0'),
-  ('ocean','recording','/linosbinaural/audio/ocean.mp3','CC BY 3.0'),
-  ('cafe','recording','/linosbinaural/audio/cafe.mp3','CC0'),
-  ('forest','recording','/linosbinaural/audio/forest.mp3','CC0'),
-  ('fireplace','recording','/linosbinaural/audio/fireplace.mp3','CC0');
+  ('rain','recording','/builds/linosbinaural/audio/rain.mp3','CC0'),
+  ('ocean','recording','/builds/linosbinaural/audio/ocean.mp3','CC BY 3.0'),
+  ('cafe','recording','/builds/linosbinaural/audio/cafe.mp3','CC0'),
+  ('forest','recording','/builds/linosbinaural/audio/forest.mp3','CC0'),
+  ('fireplace','recording','/builds/linosbinaural/audio/fireplace.mp3','CC0');
 
 create table public.purchases (
   id uuid primary key default gen_random_uuid(),

@@ -30,7 +30,7 @@ describe('bounded request bodies', () => {
   it('rejects missing and understated Content-Length after the first overflowing chunk, then cancels', async () => {
     for (const headers of ([{}, { 'content-length': '1' }] as Record<string, string>[])) {
       const cancelled = vi.fn();
-      const request = streamedRequest('/linosbinaural/api/mixes', [new Uint8Array(8), new Uint8Array(9), new Uint8Array(1024)], headers, cancelled);
+      const request = streamedRequest('/builds/linosbinaural/api/mixes', [new Uint8Array(8), new Uint8Array(9), new Uint8Array(1024)], headers, cancelled);
       await expect(body(request, 16)).rejects.toMatchObject({ status: 413, code: 'payload_too_large' });
       expect(cancelled).toHaveBeenCalledTimes(1);
     }
@@ -42,15 +42,15 @@ describe('bounded request bodies', () => {
     const split = bytes.indexOf(0xf0) + 2;
     expect(split).toBeGreaterThan(2);
     const chunks = [bytes.subarray(0, split), bytes.subarray(split)];
-    await expect(body(streamedRequest('/linosbinaural/api/mixes', chunks), bytes.byteLength)).resolves.toEqual(value);
-    await expect(body(streamedRequest('/linosbinaural/api/mixes', chunks), bytes.byteLength - 1)).rejects.toMatchObject({ status: 413 });
+    await expect(body(streamedRequest('/builds/linosbinaural/api/mixes', chunks), bytes.byteLength)).resolves.toEqual(value);
+    await expect(body(streamedRequest('/builds/linosbinaural/api/mixes', chunks), bytes.byteLength - 1)).rejects.toMatchObject({ status: 413 });
   });
 });
 
 describe('API trust boundaries', () => {
   it('rejects cross-origin writes before authentication or storage access', async () => {
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
-    const request = new Request(`${origin}/linosbinaural/api/mixes`, { method: 'POST', headers: { origin: 'https://evil.example', ...auth }, body: '{}' });
+    const request = new Request(`${origin}/builds/linosbinaural/api/mixes`, { method: 'POST', headers: { origin: 'https://evil.example', ...auth }, body: '{}' });
     const response = await handleApi(request, baseEnv);
     expect(response.status).toBe(403);
     expect(upstream).not.toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('API trust boundaries', () => {
       return new Response(null, { status: 204 });
     });
     vi.stubGlobal('fetch', upstream);
-    const request = new Request(`${origin}/linosbinaural/api/reports`, { method: 'POST', headers: { origin }, body: payload });
+    const request = new Request(`${origin}/builds/linosbinaural/api/reports`, { method: 'POST', headers: { origin }, body: payload });
     const response = await handleApi(request, baseEnv);
     expect(response.status).toBe(202);
     expect(await response.json()).toEqual({ accepted: true });
@@ -78,7 +78,7 @@ describe('API trust boundaries', () => {
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
     const payload = JSON.stringify({ token: 'a'.repeat(48), reason: 'privacy', details: '\u00e9'.repeat(1000) });
     expect(new TextEncoder().encode(payload).byteLength).toBeGreaterThan(2048);
-    const request = new Request(`${origin}/linosbinaural/api/reports`, { method: 'POST', headers: { origin }, body: payload });
+    const request = new Request(`${origin}/builds/linosbinaural/api/reports`, { method: 'POST', headers: { origin }, body: payload });
     const response = await handleApi(request, baseEnv);
     expect(response.status).toBe(413);
     expect(upstream).not.toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('API trust boundaries', () => {
       throw new Error('unexpected database write');
     });
     vi.stubGlobal('fetch', upstream);
-    const request = new Request(`${origin}/linosbinaural/api/mixes`, { method: 'POST', headers: { origin, ...auth }, body: JSON.stringify({ title: 'bad', description: '', mix: { ...DEFAULT_MIX, binaural: { ...DEFAULT_MIX.binaural, beat: 100 } } }) });
+    const request = new Request(`${origin}/builds/linosbinaural/api/mixes`, { method: 'POST', headers: { origin, ...auth }, body: JSON.stringify({ title: 'bad', description: '', mix: { ...DEFAULT_MIX, binaural: { ...DEFAULT_MIX.binaural, beat: 100 } } }) });
     const response = await handleApi(request, baseEnv);
     expect(response.status).toBe(400);
     expect(upstream).toHaveBeenCalledTimes(1);
@@ -103,7 +103,7 @@ describe('API trust boundaries', () => {
       throw new Error('unexpected request');
     });
     vi.stubGlobal('fetch', upstream);
-    const response = await handleApi(new Request(`${origin}/linosbinaural/api/mixes`, { headers: auth }), baseEnv);
+    const response = await handleApi(new Request(`${origin}/builds/linosbinaural/api/mixes`, { headers: auth }), baseEnv);
     expect(response.status).toBe(200);
     const [, options] = upstream.mock.calls[1] as unknown as [string, RequestInit];
     expect((options.headers as Record<string,string>).apikey).toBe('public-key');
@@ -124,8 +124,8 @@ describe('API trust boundaries', () => {
       throw new Error('unexpected request');
     });
     vi.stubGlobal('fetch', upstream);
-    const first = await handleApi(new Request(`${origin}/linosbinaural/api/mixes`, { headers: auth }), baseEnv);
-    const second = await handleApi(new Request(`${origin}/linosbinaural/api/mixes?offset=100`, { headers: auth }), baseEnv);
+    const first = await handleApi(new Request(`${origin}/builds/linosbinaural/api/mixes`, { headers: auth }), baseEnv);
+    const second = await handleApi(new Request(`${origin}/builds/linosbinaural/api/mixes?offset=100`, { headers: auth }), baseEnv);
     expect((await first.json() as unknown[])).toHaveLength(100);
     expect((await second.json() as unknown[])).toHaveLength(1);
     const requests = (upstream.mock.calls as unknown as [string, RequestInit][]).filter(([url]) => url.includes('/rest/v1/mixes?'));
@@ -146,7 +146,7 @@ describe('API trust boundaries', () => {
       throw new Error('unexpected request');
     });
     vi.stubGlobal('fetch', upstream);
-    const response = await handleApi(new Request(`${origin}/linosbinaural/api/account/export`, { headers: auth }), baseEnv);
+    const response = await handleApi(new Request(`${origin}/builds/linosbinaural/api/account/export`, { headers: auth }), baseEnv);
     expect(response.status).toBe(200);
     const exported = await response.json();
     expect(exported.account.id).toBe('11111111-1111-4111-8111-111111111111');
@@ -158,7 +158,7 @@ describe('API trust boundaries', () => {
   it('fails closed without a rate limit binding in production', async () => {
     const upstream = vi.fn(async () => Response.json({ id: '11111111-1111-4111-8111-111111111111' }));
     vi.stubGlobal('fetch', upstream);
-    const response = await handleApi(new Request(`${origin}/linosbinaural/api/mixes`, { headers: auth }), { ...baseEnv, RATE_LIMITER: undefined });
+    const response = await handleApi(new Request(`${origin}/builds/linosbinaural/api/mixes`, { headers: auth }), { ...baseEnv, RATE_LIMITER: undefined });
     expect(response.status).toBe(503);
     expect(upstream).toHaveBeenCalledTimes(1);
   });
@@ -187,7 +187,7 @@ describe('checkout boundaries', () => {
   it('does not accept a client amount or price ID', async () => {
     const upstream = vi.fn(async () => Response.json({ id: '11111111-1111-4111-8111-111111111111' }));
     vi.stubGlobal('fetch', upstream);
-    const request = new Request(origin + '/linosbinaural/api/checkout', { method: 'POST', headers: { origin, ...auth }, body: JSON.stringify({ currency: 'usd', amount: 1, priceId: 'price_fake' }) });
+    const request = new Request(origin + '/builds/linosbinaural/api/checkout', { method: 'POST', headers: { origin, ...auth }, body: JSON.stringify({ currency: 'usd', amount: 1, priceId: 'price_fake' }) });
     const response = await handleApi(request, payEnv);
     expect(response.status).toBe(400);
     expect(upstream).toHaveBeenCalledTimes(1);
@@ -197,7 +197,7 @@ describe('checkout boundaries', () => {
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
     for (const headers of ([{}, { 'content-length': '1' }] as Record<string, string>[])) {
       const cancelled = vi.fn();
-      const request = streamedRequest('/linosbinaural/api/stripe/webhook', [new Uint8Array(64_000), new Uint8Array(64_001), new Uint8Array(10)],
+      const request = streamedRequest('/builds/linosbinaural/api/stripe/webhook', [new Uint8Array(64_000), new Uint8Array(64_001), new Uint8Array(10)],
         { 'stripe-signature': 'invalid', ...headers }, cancelled);
       const response = await handleApi(request, payEnv);
       expect(response.status).toBe(413);
@@ -219,7 +219,7 @@ describe('checkout boundaries', () => {
     const header = `t=${timestamp},v1=${Array.from(digest, b => b.toString(16).padStart(2, '0')).join('')}`;
     const split = bytes.indexOf(0xf0) + 2;
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
-    const request = streamedRequest('/linosbinaural/api/stripe/webhook', [bytes.subarray(0, split), bytes.subarray(split)], { 'stripe-signature': header });
+    const request = streamedRequest('/builds/linosbinaural/api/stripe/webhook', [bytes.subarray(0, split), bytes.subarray(split)], { 'stripe-signature': header });
     const response = await handleApi(request, payEnv);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ received: true, ignored: true });
@@ -236,7 +236,7 @@ describe('checkout boundaries', () => {
     const digest = new Uint8Array(await crypto.subtle.sign('HMAC', key, signed));
     const header = `t=${timestamp},v1=${Array.from(digest, b => b.toString(16).padStart(2, '0')).join('')}`;
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
-    const response = await handleApi(streamedRequest('/linosbinaural/api/stripe/webhook', [raw], { 'stripe-signature': header }), payEnv);
+    const response = await handleApi(streamedRequest('/builds/linosbinaural/api/stripe/webhook', [raw], { 'stripe-signature': header }), payEnv);
     expect(response.status).toBe(400);
     expect((await response.json()).error).toBe('invalid_json');
     expect(upstream).not.toHaveBeenCalled();
@@ -244,7 +244,7 @@ describe('checkout boundaries', () => {
 
   it('rejects an unsigned webhook before any network or database call', async () => {
     const upstream = vi.fn(); vi.stubGlobal('fetch', upstream);
-    const response = await handleApi(new Request(origin + '/linosbinaural/api/stripe/webhook', { method: 'POST', body: '{"id":"evt_fake"}' }), payEnv);
+    const response = await handleApi(new Request(origin + '/builds/linosbinaural/api/stripe/webhook', { method: 'POST', body: '{"id":"evt_fake"}' }), payEnv);
     expect(response.status).toBe(400);
     expect(upstream).not.toHaveBeenCalled();
   });
@@ -263,7 +263,7 @@ describe('checkout boundaries', () => {
       throw new Error('unexpected ' + url);
     });
     vi.stubGlobal('fetch', upstream);
-    const response = await handleApi(new Request(origin + '/linosbinaural/api/stripe/webhook', { method: 'POST', headers: { 'stripe-signature': header }, body: payload }), payEnv);
+    const response = await handleApi(new Request(origin + '/builds/linosbinaural/api/stripe/webhook', { method: 'POST', headers: { 'stripe-signature': header }, body: payload }), payEnv);
     expect(response.status).toBe(200);
     expect(upstream).toHaveBeenCalledTimes(4);
     const rpc = upstream.mock.calls[3] as unknown as [string, RequestInit];

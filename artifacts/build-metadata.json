@@ -1,7 +1,8 @@
 {
-  "builtAt": "2026-09-24T11:01:50.858Z",
-  "appEnvironment": "development",
-  "supabaseOrigin": "http://127.0.0.1:54331",
+  "builtAt": "2026-09-28T05:08:00.793Z",
+  "appEnvironment": "production",
+  "guestOnly": true,
+  "supabaseOrigin": null,
   "adsEnabled": false,
   "checkoutEnabled": false
 }

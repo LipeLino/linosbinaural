@@ -152,7 +152,7 @@ export const FACTORY_PRESETS = [
   },
 ] as const;
 export const DEFAULT_MIX: Mix = structuredClone(FACTORY_PRESETS[0].mix);
-export const BASE_PATH = "/linosbinaural";
+export const BASE_PATH = "/builds/linosbinaural";
 export const STORAGE_PREFIX = "linosbinaural:v1:";
 export function assetPath(path: string) {
   return `${BASE_PATH}/${path.replace(/^\/+/, "")}`;
